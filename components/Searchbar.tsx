@@ -1,60 +1,57 @@
 import React, {useState, useEffect} from 'react';
 import {View, TextInput, FlatList, Text, StyleSheet} from 'react-native';
 import axios from 'axios';
-// import Config from 'react-native-config';
-// import {REACT_APP_BACKEND_URL} from '@env'
+import {REACT_APP_BACKEND_URL} from '@env';
 type Restaurant = {
-  data: [];
+  name: string; address: string; _id: string,email:string,phone:string
 };
 
 const Searchbar: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [restaurants, setRestaurants] =
-    useState<{name: string; address: string; _id: string}[]>();
+    useState<Restaurant[]>([]);
   const [filteredRestaurants, setFilteredRestaurants] =
-    useState<{name: string; address: string; _id: string}[]>();
+    useState<Restaurant[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const fetchData = async () => {
+  const fetchAllData = async () => {
     try {
       setLoading(true);
-      const response: Restaurant = await axios.get(
-        'http://10.1.1.0:3001/api/restaurant',
-        // 'http://localhost:3001/api/restaurant',
+      const response = await axios.get(
+        `${REACT_APP_BACKEND_URL}/api/restaurant`,
       );
       setRestaurants(response.data);
-      restaurants?.map(restaurant => {
-        console.log(restaurant.name);
-      });
+
       setLoading(false);
     } catch (err: any) {
-      console.log(err);
-      setError(err);
+      setError(err.message);
       setLoading(false);
     }
   };
-  const fetchQueryResult = async (query: string) => {
+  const fetchQueryData = async (query: string) => {
     try {
       setLoading(true);
-      const response: Restaurant = await axios.get(
-        `http://10.1.1.0:3001/api/restaurant/search/${query}`,
+      const response = await axios.get(
+        `${REACT_APP_BACKEND_URL}/api/restaurant/search/${query}`,
       );
       setFilteredRestaurants(response.data);
-    } catch (err) {
+      setLoading(false)
+    } catch (err: any) {
+      setError(err.message)
+      setFilteredRestaurants([]);
       setLoading(false);
     }
   };
   useEffect(() => {
-    fetchData();
+    fetchAllData();
   }, []);
 
-  const handleSearch = (query: string) => {
+  const handleSearch = async(query: string) => {
     setSearchQuery(query);
-    console.log(query);
     if (query) {
-      fetchQueryResult(query);
+      await fetchQueryData(query);
     } else {
-      setRestaurants(restaurants);
+      setFilteredRestaurants([]);
     }
   };
 
@@ -72,7 +69,7 @@ const Searchbar: React.FC = () => {
             onChangeText={handleSearch}
           />
           <FlatList
-            data={restaurants}
+            data={filteredRestaurants.length>0?filteredRestaurants:restaurants}
             keyExtractor={item => item._id}
             renderItem={({item}) => (
               <Text style={styles.itemText}>{item.name}</Text>
