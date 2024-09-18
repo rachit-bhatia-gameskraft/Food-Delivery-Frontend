@@ -34,6 +34,7 @@ const Searchbar: React.FC = () => {
   const fetchAllData = async () => {
     try {
       setLoading(true);
+      
       const response = await axios.get(
         `${REACT_APP_BACKEND_URL}/api/restaurant`,
       );

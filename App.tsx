@@ -1,23 +1,37 @@
-import {StyleSheet, View} from 'react-native';
 import React from 'react';
-import Searchbar from './components/Searchbar';
-import HomeScreen from './Screens/Home';
-const App = () => {
-  //console.log(process.env.REACT_APP_BACKEND_URL)
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import HomeScreen from './screens/HomeScreen';
+import RestaurantScreen from './screens/RestaurantScreen';
+import CartScreen from './screens/CartScreen';
+import OrderScreen from './screens/OrderScreen';
 
+type RootStackParamList = {
+  Home: undefined;
+  Restaurant: undefined;
+  Cart: undefined;
+  Order: undefined;
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
+
+const App: React.FC = () => {
   return (
-    <>
-    <View style={styles.container}>
-      <Searchbar />
-    </View>
-    <HomeScreen/>
-    </>
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="Home"
+        screenOptions={{
+          headerShown: false, // Adjust if you want to show headers
+        }}
+      >
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Restaurant" component={RestaurantScreen} />
+        <Stack.Screen name="Cart" component={CartScreen} />
+        <Stack.Screen name="Order" component={OrderScreen} />
+        
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default App;
