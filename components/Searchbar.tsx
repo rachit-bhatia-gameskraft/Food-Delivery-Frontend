@@ -11,6 +11,7 @@ type Restaurant = {
 };
 
 const Searchbar: React.FC = () => {
+
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [filteredRestaurants, setFilteredRestaurants] = useState<Restaurant[]>(
