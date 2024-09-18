@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, Linking, TouchableOpacity } from 'react-native';
-
 type RestaurantProps = {
   _id: string;
   name: string;
@@ -73,7 +72,7 @@ const styles = StyleSheet.create({
   });
   
 
-const RestaurantCard: React.FC<RestaurantProps> = ({
+const RestaurantCard: React.FC<any> = ({
   name,
   address,
   email,
@@ -81,11 +80,14 @@ const RestaurantCard: React.FC<RestaurantProps> = ({
   rating,
   cuisine,
   website,
+ 
 }) => {
   const defaultImage = 'https://via.placeholder.com/150'; // Default Image URL
 
   return (
     <View style={styles.card}>
+      
+
       <Image style={styles.image} source={{ uri: defaultImage }} />
 
       <View style={styles.details}>
@@ -106,6 +108,7 @@ const RestaurantCard: React.FC<RestaurantProps> = ({
           <Text style={styles.website}>Visit Website</Text>
         </TouchableOpacity>
       </View>
+      
     </View>
   );
 };
