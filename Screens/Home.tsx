@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView } from 'react-native';
+import { ScrollView , View} from 'react-native';
 import RestaurantCard from '../components/RestaurantCard';
 import Searchbar from '../components/Searchbar';
 
@@ -18,11 +18,16 @@ const restaurants = [
 
 const HomeScreen: React.FC = () => {
   return (
+    <View>
+
+    <Searchbar/>
     <ScrollView>
       {restaurants.map((restaurant) => (
         <RestaurantCard key={restaurant._id} {...restaurant} />
       ))}
     </ScrollView>
+
+    </View>
   );
 };
 

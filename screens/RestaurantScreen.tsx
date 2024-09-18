@@ -27,7 +27,7 @@ const RestaurantScreen: React.FC<RestaurantScreenProps> = ({ route, navigation }
       const response = await axios.get(
         `http://10.0.2.2:3001/api/menu/66e95387b962c552edeb2209/`,
       );
-      console.log(response.data)
+      
       setMenutItems(response.data)
      
       
@@ -46,9 +46,11 @@ const RestaurantScreen: React.FC<RestaurantScreenProps> = ({ route, navigation }
 
   const handleAddToCart = (itemId: string) => {
     setCartItems((prevCart) => ({
+      
       ...prevCart,
       [itemId]: (prevCart[itemId] || 0) + 1,
     }));
+  
   };
 
   const handleRemoveFromCart = (itemId: string) => {
