@@ -7,6 +7,7 @@ type Restaurant = {
 };
 
 const Searchbar: React.FC = () => {
+  console.log("React Native",REACT_APP_BACKEND_URL)
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [restaurants, setRestaurants] =
     useState<Restaurant[]>([]);
@@ -19,8 +20,7 @@ const Searchbar: React.FC = () => {
       setLoading(true);
       
       const response = await axios.get(
-        
-        `http://10.0.2.2:3001/api/restaurant`,
+        `${REACT_APP_BACKEND_URL}/api/restaurant`,
       );
       setRestaurants(response.data);
 
