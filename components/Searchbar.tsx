@@ -17,8 +17,10 @@ const Searchbar: React.FC = () => {
   const fetchAllData = async () => {
     try {
       setLoading(true);
+      
       const response = await axios.get(
-        `${REACT_APP_BACKEND_URL}/api/restaurant`,
+        
+        `http://10.0.2.2:3001/api/restaurant`,
       );
       setRestaurants(response.data);
 
@@ -32,7 +34,7 @@ const Searchbar: React.FC = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `${REACT_APP_BACKEND_URL}/api/restaurant/search/${query}`,
+        `http://10.0.2.2:3001/api/restaurant/search/${query}`,
       );
       setFilteredRestaurants(response.data);
       setLoading(false)
