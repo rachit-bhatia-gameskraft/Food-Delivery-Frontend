@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, Linking, TouchableOpacity } from 'react-native';
+import Star from '../assets/star';
 
 type RestaurantProps = {
   _id: string;
@@ -7,7 +8,7 @@ type RestaurantProps = {
   address: string;
   email: string;
   phone: string;
-  openingHours?: object; // Optional property
+  openingHours?: object;
   rating: number;
   cuisine: string[];
   website: string;
@@ -28,8 +29,8 @@ const styles = StyleSheet.create({
       padding: 10,
     },
     image: {
-      width: 140,
-      height: 170,
+      width: 130,
+      height: 150,
       borderRadius: 8,
     },
     details: {
@@ -39,31 +40,47 @@ const styles = StyleSheet.create({
     name: {
       fontSize: 18,
       fontWeight: 'bold',
-      color: '#333',
+      color: '#333'
     },
     address: {
       color: '#777',
-      marginTop: 4,
     },
     email: {
-      color: '#555',
-      marginTop: 4,
+      color: '#777',
     },
     phone: {
-      color: '#555',
-      marginTop: 4,
+      color: '#777',
     },
     row: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginTop: 8,
+    },
+    star: {
+      backgroundColor: 'green',
+      height: 14,
+      width: 14,
+      borderRadius: 7,
+      justifyContent: 'center',
+      alignItems: 'center', 
+      marginTop: 3
     },
     rating: {
-      color: '#FFD700',
+      color: 'Black',
       fontWeight: 'bold',
+      marginLeft: 3
+    },
+    dot: {
+      fontWeight: 'bold', 
+      color: '#000',
+      marginHorizontal: 5,
+    },
+    timings: {
+      color: 'Black',
+      fontWeight: '500',
     },
     cuisine: {
       color: '#666',
+      fontWeight: 'normal',
+      marginTop: 1
     },
     website: {
       color: '#1E90FF',
@@ -91,20 +108,19 @@ const RestaurantCard: React.FC<RestaurantProps> = ({
       <View style={styles.details}>
         <Text style={styles.name}>{name}</Text>
         <View style={styles.row}>
-          <Text style={styles.rating}>Rating: {rating}</Text>
+          <View style={styles.star}>
+            <Star></Star>
+          </View>
+          <Text style={styles.rating}>{rating}</Text>
+          <Text style={styles.dot}>•</Text>
+          <Text style={styles.timings}>5-6 mins</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.cuisine}>{cuisine.join(', ')}</Text>
         </View>
         <Text style={styles.address}>{address}</Text>
         <Text style={styles.email}>{email}</Text>
         <Text style={styles.phone}>{phone}</Text>
-
-        <View style={styles.row}>
-          <Text style={styles.cuisine}>{cuisine.join(', ')}</Text>
-        </View>
-
-        {/* Website Link */}
-        <TouchableOpacity onPress={() => Linking.openURL(website)}>
-          <Text style={styles.website}>Visit Website</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
