@@ -89,8 +89,8 @@ const RestaurantScreen: React.FC<{navigation:any,route:any}> = ({
           onPress={() => navigation.navigate('Cart', {cartItems})}>
           <Text style={styles.cart}>🛒</Text>
         </TouchableOpacity>
-            <Searchbar onSearchQueryChange={setSearchQuery} />
       </View>
+            <Searchbar onSearchQueryChange={setSearchQuery} />
 
       <FlatList
         data={menuItems}
