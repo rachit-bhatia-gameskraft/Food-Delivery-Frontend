@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 
 } from 'react-native';
-// import MenuItem from '../components/MenuItem';
+ import MenuItem from '../components/MenuItem';
 // type Restaurant = {
 //   name: string;
 //   address: string;
