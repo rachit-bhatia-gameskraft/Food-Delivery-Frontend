@@ -1,41 +1,16 @@
-import React, {useState,} from 'react';
-import {View, TextInput, Text, StyleSheet} from 'react-native';
-import axios from 'axios';
-import {REACT_APP_BACKEND_URL} from '@env';
-type Restaurant = {
-  name: string;
-  address: string;
-  _id: string;
-  email: string;
-  phone: string;
-};
-// import { Dispatch, SetStateAction } from 'react';
+import React, {useState} from 'react';
+import {View, TextInput, StyleSheet} from 'react-native';
 
-// Define the type for your props
-// interface SearchBarProps {
-//   style?: object; // Optional style prop
-//   fetchQueryData
-// }
-
-const Searchbar: React.FC<any> = ({fetchQueryData}) => {
+const Searchbar: React.FC<any> = ({debouncedFetchQueryData}) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-
-
-
-
   const handleSearch = (query: string) => {
-    setSearchQuery(query)
-    fetchQueryData(query)
+    setSearchQuery(query);
+    debouncedFetchQueryData(query);
   };
 
   return (
     <View style={styles.container}>
-      {loading && <Text>loading...</Text>}
-      {error && <Text>{error}</Text>}
       <View style={styles.list}>
         <TextInput
           style={styles.searchInput}
