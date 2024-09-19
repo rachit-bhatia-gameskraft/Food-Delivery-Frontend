@@ -18,8 +18,8 @@ interface MenuItemProps {
 
 
 const MenuItem: React.FC<MenuItemProps> = ({ item, quantity, handleAddToCart, handleRemoveFromCart}) => {
-  console.log("Hi i am inside the menu" ,item)
- 
+  // console.log("Hi i am inside the menu" ,item)
+
   return (
          <View style={styles.menuItemContainer}>
             <Image source={{uri: item.imageUrl}} style={styles.menuImage} />

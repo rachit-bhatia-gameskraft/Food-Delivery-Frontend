@@ -1,9 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, TouchableOpacity, View, Text} from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Text,
+} from 'react-native';
 import RestaurantCard from '../components/RestaurantCard';
 import Searchbar from '../components/Searchbar';
-import axios from 'axios';
-import {REACT_APP_BACKEND_URL} from '@env';
+import fetchQueryData from '../utils/fetchUtils';
 
 type Restaurant = {
   name: string;
@@ -15,6 +20,7 @@ type Restaurant = {
 
 const Home: React.FC<{navigation: any}> = ({navigation}) => {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const debounce = <T extends (...args: any[]) => any>(
@@ -29,29 +35,25 @@ const Home: React.FC<{navigation: any}> = ({navigation}) => {
       }, timer);
     };
   };
-  const fetchQueryData = async (query: string) => {
-    try {
-      setLoading(true);
-      const apiUrl = query
-        ? `${REACT_APP_BACKEND_URL}/api/restaurant/search/${query}`
-        : `${REACT_APP_BACKEND_URL}/api/restaurant`;
-      const response = await axios.get(apiUrl);
-      setRestaurants(response.data);
-      setLoading(false);
-    } catch (err: any) {
-      setError(err.message);
-
-      setLoading(false);
-    }
-  };
-  const debouncedFetchQueryData = debounce(fetchQueryData, 300);
+  // const debouncedFetchQueryData = debounce(fetchQueryData, 300);
   useEffect(() => {
-    fetchQueryData('');
-  }, []);
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchQueryData(searchQuery, 'restaurant');
+        setLoading(false);
+        setRestaurants(data);
+      } catch (err:any) {
+        setLoading(false);
+        setError(err.message);
+      }
+    };
+    fetchData();
+  }, [searchQuery]);
 
   return (
     <View style={style.container}>
-      <Searchbar style={style.searchbar} debouncedFetchQueryData={debouncedFetchQueryData} />
+      <Searchbar style={style.searchbar} onSearchQueryChange={setSearchQuery} />
       {loading && <Text>loading...</Text>}
       {error && <Text>{error}</Text>}
       <ScrollView style={style.list}>

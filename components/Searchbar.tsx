@@ -1,20 +1,18 @@
 import React, {useState} from 'react';
 import {View, TextInput, StyleSheet} from 'react-native';
-
-const Searchbar: React.FC<any> = ({debouncedFetchQueryData}) => {
+const Searchbar: React.FC<any> = ({onSearchQueryChange}) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    debouncedFetchQueryData(query);
+    onSearchQueryChange(query);
   };
-
   return (
     <View style={styles.container}>
       <View style={styles.list}>
         <TextInput
           style={styles.searchInput}
-          placeholder="Search for restaurants,dishes,etc..."
+          placeholder="Search delicious food..."
           value={searchQuery}
           onChangeText={handleSearch}
         />
