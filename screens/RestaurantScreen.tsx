@@ -7,26 +7,20 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
-  
+
 } from 'react-native';
 // import MenuItem from '../components/MenuItem';
-type Restaurant = {
-  name: string;
-  address: string;
-  _id: string;
-  email: string;
-  phone: string;
-};
-interface RestaurantScreenProps {
-  route: {
-    params: {
-      restaurant: Restaurant;
-    };
-  };
-  navigation: any;
-}
+// type Restaurant = {
+//   name: string;
+//   address: string;
+//   _id: string;
+//   email: string;
+//   phone: string;
+// };
 
-const RestaurantScreen: React.FC<RestaurantScreenProps> = ({
+
+
+const RestaurantScreen: React.FC<{navigation:any,route:any}> = ({
   route,
   navigation,
 }) => {

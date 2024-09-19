@@ -1,5 +1,5 @@
-import React, {useEffect, useState, useCallback} from 'react';
-import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {ScrollView, StyleSheet, TouchableOpacity, View, Text} from 'react-native';
 import RestaurantCard from '../components/RestaurantCard';
 import Searchbar from '../components/Searchbar';
 import axios from 'axios';
@@ -44,16 +44,20 @@ const Home: React.FC<{navigation: any}> = ({navigation}) => {
       setLoading(false);
     }
   };
+  const debouncedFetchQueryData = debounce(fetchQueryData, 300);
   useEffect(() => {
     fetchQueryData('');
   }, []);
 
   return (
     <View style={style.container}>
-      <Searchbar style={style.searchbar} fetchQueryData={fetchQueryData} />
+      <Searchbar style={style.searchbar} debouncedFetchQueryData={debouncedFetchQueryData} />
+      {loading && <Text>loading...</Text>}
+      {error && <Text>{error}</Text>}
       <ScrollView style={style.list}>
         {restaurants.map(restaurant => (
           <TouchableOpacity
+          key={restaurant._id}
             onPress={() =>
               navigation.navigate('Restaurant', {
                 restaurant,
