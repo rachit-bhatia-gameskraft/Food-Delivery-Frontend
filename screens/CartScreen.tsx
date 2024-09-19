@@ -12,7 +12,7 @@ const CartScreen: React.FC<{ navigation: any; route: any }> = ({ navigation, rou
   const cartItems: CartItem[] = Object.entries(route.params.cartItems || {}).map(([id, quantity]) => ({
     id,
     name: `Item ${id}`, // Replace with actual item names
-    price: '$9.99', // Replace with actual item prices
+    price: `$9.99`, // Replace with actual item prices
     quantity : Number(quantity),
   }));
 
