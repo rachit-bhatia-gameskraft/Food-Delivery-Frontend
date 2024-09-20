@@ -12,13 +12,7 @@ import {
 import MenuItem from '../components/MenuItem';
 import Searchbar from '../components/Searchbar';
 import fetchQueryData from '../utils/fetchUtils';
-// type Restaurant = {
-//   name: string;
-//   address: string;
-//   _id: string;
-//   email: string;
-//   phone: string;
-// };
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -30,8 +24,8 @@ const RestaurantScreen: React.FC<{navigation:any,route:any}> = ({
   const [menuItems, setMenutItems] = useState();
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const {restaurant} = route.params;
 
+  const {restaurant} = route.params;
   useEffect(() => {
     const fetchData = async () => {
       const data = await fetchQueryData(searchQuery, 'menu',restaurant._id);
@@ -39,6 +33,36 @@ const RestaurantScreen: React.FC<{navigation:any,route:any}> = ({
     };
     fetchData();
   }, [searchQuery,restaurant._id]);
+
+  const saveCartToLocalStorage = async (items : object) => {
+    try {
+      await AsyncStorage.setItem('cartItems', JSON.stringify(items));
+    } catch (error) {
+      console.error('Failed to save cart to local storage', error);
+    }
+  };
+
+  const loadCartFromLocalStorage = async () => {
+    try {
+      const storedCartItems = await AsyncStorage.getItem('cartItems');
+      if (storedCartItems !== null) {
+        setCartItems(JSON.parse(storedCartItems));
+      }
+    } catch (error) {
+      console.error('Failed to load cart from local storage', error);
+    }
+  };
+
+  useEffect(() => {
+    const length = Object.keys(cartItems).length;
+    if(length > 0){
+      saveCartToLocalStorage(cartItems);
+    }
+  }, [cartItems]);
+
+  useEffect(() => {
+    loadCartFromLocalStorage();
+  }, []);
 
 
 
@@ -63,7 +87,13 @@ const RestaurantScreen: React.FC<{navigation:any,route:any}> = ({
     }
   };
 
-  const handleAddToCart = (itemId: string) => {
+  const handleAddToCart = async(itemId: string) => {
+    const storedRestaurantId = await AsyncStorage.getItem('restaurantId');
+    if(restaurant._id !== storedRestaurantId){
+      await AsyncStorage.setItem('restaurantId', restaurant._id);
+      await AsyncStorage.removeItem('cartItems');
+      setCartItems({});
+    }
     setCartItems(prevCart => ({
       ...prevCart,
       [itemId]: (prevCart[itemId] || 0) + 1,
@@ -77,7 +107,6 @@ const RestaurantScreen: React.FC<{navigation:any,route:any}> = ({
     }));
   };
 
-  // console.log('carItems', cartItems);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
