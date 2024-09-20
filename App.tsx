@@ -5,6 +5,7 @@ import HomeScreen from './screens/HomeScreen';
 import RestaurantScreen from './screens/RestaurantScreen';
 import CartScreen from './screens/CartScreen';
 import OrderScreen from './screens/OrderScreen';
+import OrderDetailsScreen from './screens/OrderDetailsScreen';
 
 type RootStackParamList = {
   Home: undefined;
@@ -28,7 +29,7 @@ const App: React.FC = () => {
         <Stack.Screen name="Restaurant" component={RestaurantScreen} />
         <Stack.Screen name="Cart" component={CartScreen} />
         <Stack.Screen name="Order" component={OrderScreen} />
-
+        <Stack.Screen name="OrderDetails" component={OrderDetailsScreen} /> 
       </Stack.Navigator>
     </NavigationContainer>
   );
