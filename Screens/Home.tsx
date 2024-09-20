@@ -35,6 +35,7 @@ const Home: React.FC<{navigation: any}> = ({navigation}) => {
       }, timer);
     };
   };
+  
   // const debouncedFetchQueryData = debounce(fetchQueryData, 300);
   useEffect(() => {
     const fetchData = async () => {
