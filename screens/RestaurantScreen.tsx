@@ -2,8 +2,10 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import MenuItem from '../components/MenuItem';
 import { useCart } from '../store/CartContext';
+
 import Icon from 'react-native-vector-icons/Ionicons';  
 import BackArrow  from '../assets/backArrow';
+
 import {
   View,
   Text,
@@ -206,12 +208,14 @@ const RestaurantScreen: React.FC<{navigation:any,route:any}> = ({
     <View style={styles.container}>
       <View style={styles.header}>
       
+
         <TouchableOpacity onPress={() => navigation.goBack()}style={styles.backButton} >
            {/* <Text style={[styles.back]}>←</Text> */}
            <BackArrow/>
 
    
         
+
         </TouchableOpacity>
         <Text style={styles.restaurantName}> {restaurant.name}</Text>
         <TouchableOpacity
@@ -219,10 +223,12 @@ const RestaurantScreen: React.FC<{navigation:any,route:any}> = ({
           <Text style={styles.cart}>🛒</Text>
         </TouchableOpacity>
       </View>
+
     
       <Searchbar onSearchQueryChange={setSearchQuery} />
             
             
+
 
         <FlatList
            data={menuItems}

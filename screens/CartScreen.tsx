@@ -2,8 +2,10 @@ import React, { useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import MenuItem from '../components/MenuItem';
 import { useCart } from '../store/CartContext';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BackArrow from '../assets/backArrow';
+
 
 
 interface MyItem  {
@@ -32,12 +34,15 @@ interface cartItem extends MyItem{
 
 
 const CartScreen: React.FC<{ navigation: any; route: any }> = ({ navigation, route }) => {
+
    const {restaurant}  = route.params;
+
    const { cartItems , setCartItems} = useCart();
 
    //console.log("tyoe of function",typeof(handleAddToCart))
    
   const cartItem: cartItem[] =  Object.values(cartItems || []);
+
 
   console.log("I am inside the cart cartScreen", cartItems)
  
@@ -88,9 +93,11 @@ const CartScreen: React.FC<{ navigation: any; route: any }> = ({ navigation, rou
 
 
 
+
   return (
     <View style={styles.container}>
         
+
      
       <View style={styles.row}> 
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
@@ -98,6 +105,7 @@ const CartScreen: React.FC<{ navigation: any; route: any }> = ({ navigation, rou
         </TouchableOpacity>
         <Text style={styles.title}>Your Cart</Text>
        </View>
+
       <FlatList
         data={cartItem}
         renderItem={({ item }) => (
@@ -137,6 +145,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#888',
   },
+
   backButton: {
     backgroundColor: '#FF6347',  // Tomato red background
     paddingVertical: 8,          // Vertical padding for better touch target
@@ -151,6 +160,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,              // Slight margin from the screen's edge
     marginTop: 10,                           // Optional: Slight margin to the left of the screen
   },
+
   back: {fontSize: 24},
   container: { flex: 1, padding: 16, backgroundColor: '#fff' },
   title: { fontSize: 24, fontWeight: 'bold', marginTop: 10, marginLeft:10 },
