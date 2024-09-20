@@ -1,6 +1,14 @@
-import React from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 
+type Restaurant = {
+  name: string;
+  address: string;
+  _id: string;
+  email: string;
+  phone: string;
+};
 interface MenuItemProps {
   item: {
     _id: string;
@@ -8,18 +16,79 @@ interface MenuItemProps {
     price: string;
     imageUrl: string;
   };
-  quantity: number;
-  handleAddToCart: (itemId: string) => void;
-  handleRemoveFromCart: (itemId: string) => void;
-  // cartItems: { [key:string]: number };  // Passing the entire cartItems state
-  // setCartItems: React.Dispatch<React.SetStateAction<{ [key: string]: number }>>;
+  
+  // handleAddToCart: (item: string) => void;
+  // handleRemoveFromCart: (item: string) => void;
+  //handleAddToCart: (item: { _id: string; name: string; price: string; imageUrl: string }) => void;
+  //handleRemoveFromCart: (item: { _id: string; name: string; price: string; imageUrl: string }) => void;
+  
+   cartItems: { [key: string]: { item: any, quantity: number }  };  // Passing the entire cartItems state
+   setCartItems: React.Dispatch<React.SetStateAction<{ [key: string]: { item: any, quantity: number }  }>>;
+   restaurant : Restaurant
 }
 
 
 
-const MenuItem: React.FC<MenuItemProps> = ({ item, quantity, handleAddToCart, handleRemoveFromCart}) => {
-  // console.log("Hi i am inside the menu" ,item)
+const MenuItem: React.FC<MenuItemProps> = ({ item,cartItems,setCartItems,restaurant}) => {
+   
+  //const [cartItems, setCartItems] = useState<{ [key: string]: { item: any, quantity: number } }>({});
 
+  const handleAddToCart = async(item: any) => {
+
+    const storedRestaurantId = await AsyncStorage.getItem('restaurantId');
+    if(restaurant._id !== storedRestaurantId){
+      await AsyncStorage.setItem('restaurantId', restaurant._id);
+      await AsyncStorage.removeItem('cartItems');
+      setCartItems({});
+    }
+    
+    setCartItems(prevCart => ({
+      ...prevCart,
+      [item._id]:{ 
+        item,
+        quantity: (prevCart[item._id]?.quantity || 0) + 1
+      
+      },    }));
+  
+  };
+
+  const handleRemoveFromCart = (item: any) => {
+    
+    
+
+    if(cartItems[item._id]!=undefined){
+      setCartItems(prevCart => ({
+      ...prevCart,
+      [item._id]:{ 
+        item,
+        quantity: Math.max((prevCart[item._id]?.quantity- 1),0)
+      
+      },  }));
+
+    
+      if(cartItems[item._id]?.quantity===1){
+        
+         setCartItems(prevCart => {
+          const updatedCart = { ...prevCart };
+      
+
+          
+            delete updatedCart[item._id];
+          
+      
+          return updatedCart;
+        });
+
+      }
+
+    }
+    
+    
+    
+
+      
+  };
+ console.log("Menu", cartItems)
   return (
          <View style={styles.menuItemContainer}>
             <Image source={{uri: item.imageUrl}} style={styles.menuImage} />
@@ -28,15 +97,15 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, quantity, handleAddToCart, ha
               <Text style={styles.menuPrice}>{item.price}</Text>
               <View style={styles.quantityControls}>
                 <TouchableOpacity
-                  onPress={() => handleRemoveFromCart(item._id)}
+                  onPress={() => handleRemoveFromCart(item)}
                   style={styles.controlButton}>
                   <Text style={styles.controlText}>-</Text>
                 </TouchableOpacity>
                 <Text style={styles.quantityText}>
-                  {quantity || 0}
+                  {cartItems[item._id]?.quantity || 0}
                 </Text>
                 <TouchableOpacity
-                  onPress={() => handleAddToCart(item._id)}
+                  onPress={() => handleAddToCart(item)}
                   style={styles.controlButton}>
                   <Text style={styles.controlText}>+</Text>
                 </TouchableOpacity>
@@ -101,3 +170,7 @@ const styles = StyleSheet.create({
 });
 
 export default MenuItem;
+function setCartItems(arg0: (prevCart: any) => any) {
+  throw new Error('Function not implemented.');
+}
+
