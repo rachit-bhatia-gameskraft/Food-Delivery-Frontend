@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+const userId = "60b6bdf9d2a9b818a4b49a77";
 
 interface CartItem {
   id: string;
@@ -36,7 +37,7 @@ const CartScreen: React.FC<{ navigation: any; route: any }> = ({ navigation, rou
       </View>
       <TouchableOpacity
         style={styles.checkoutButton}
-        onPress={() => navigation.navigate('Order')}
+        onPress={() => navigation.navigate('Order', {userId})} //send user ID here
       >
         <Text style={styles.buttonText}>Checkout</Text>
       </TouchableOpacity>

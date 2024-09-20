@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 
-const OrderScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
+const OrderScreen: React.FC<{ navigation:any,route:any }> = ({ navigation, route }) => {  //get user id route. params
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const {userId} = route.params;
 
   useEffect(() => {
     fetchOrderHistory();
@@ -12,7 +13,7 @@ const OrderScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
 
   const fetchOrderHistory = async () => {
     try {
-      const response = await axios.get('http://10.0.2.2:3001/api/order/user/60b6bdf9d2a9b818a4b49a76/orders');
+      const response = await axios.get(`http://10.0.2.2:3001/api/order/user/${userId}/orders`);
       setOrders(response.data);
       setLoading(false);
     } catch (error) {
