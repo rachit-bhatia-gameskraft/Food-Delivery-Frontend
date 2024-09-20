@@ -10,6 +10,14 @@ interface MyItem  {
   //handleRemoveFromCart: (item: { _id: string; name: string; price: string; imageUrl: string }) => void;
 }
 
+type Restaurant = {
+  name: string;
+  address: string;
+  _id: string;
+  email: string;
+  phone: string;
+};
+
 interface cartItem extends MyItem{
   item: {
     _id: string;
@@ -22,7 +30,7 @@ interface cartItem extends MyItem{
 
 
 const CartScreen: React.FC<{ navigation: any; route: any }> = ({ navigation, route }) => {
-  console.log(route.params)
+   const restaurant  = route.params;
    const { cartItems , setCartItems} = useCart();
 
    //console.log("tyoe of function",typeof(handleAddToCart))
@@ -58,6 +66,7 @@ const CartScreen: React.FC<{ navigation: any; route: any }> = ({ navigation, rou
           item={item.item} // Pass the item details
           cartItems={cartItems}
           setCartItems={setCartItems}
+          restaurant={restaurant}
           
         />
        )}

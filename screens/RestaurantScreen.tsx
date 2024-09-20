@@ -12,6 +12,10 @@ import {
 
 } from 'react-native';
 
+import Searchbar from '../components/Searchbar';
+import fetchQueryData from '../utils/fetchUtils';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 // type Restaurant = {
 //   name: string;
 //   address: string;
@@ -33,59 +37,97 @@ const RestaurantScreen: React.FC<{navigation:any,route:any}> = ({
   route,
   navigation,
 }) => {
+ // const [cartItems, setCartItems] = useState<{ [key: string]: number }>({});
 
 //const [cartItems, setCartItems] = useState<{ [key: string]: { item: any, quantity: number } }>({});
  const {cartItems, setCartItems} = useCart();
-  const restaurant = route.params.restaurant;
-  useEffect(() => {
-    fetchMenu(restaurant._id);
-  }, [restaurant._id]);
+ // const restaurant = route.params.restaurant;
+  // useEffect(() => {
+  //   fetchMenu(restaurant._id);
+  // }, [restaurant._id]);
 
   const [menuItems, setMenutItems] = useState();
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const fetchMenu = async (restaurantId: string) => {
+
+  const {restaurant} = route.params;
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetchQueryData(searchQuery, 'menu',restaurant._id);
+      setMenutItems(data);
+    };
+    fetchData();
+  }, [searchQuery,restaurant._id]);
+
+  const saveCartToLocalStorage = async (items : object) => {
     try {
-      const response = await axios.get(
-        `http://10.0.2.2:3001/api/menu/${restaurantId}`
-      );
-      
-    
-    
-        console.log('Response Data:', response.data);
-      
-     
-  
-      // Set the fetched menu items in the state
-      setMenutItems(response.data);
-     
-    } 
-    catch (error) {
-      // Handle errors here
-      console.error('Error fetching menu data:', error);
+      await AsyncStorage.setItem('cartItems', JSON.stringify(items));
+    } catch (error) {
+      console.error('Failed to save cart to local storage', error);
     }
   };
-  
-    
+
+  const loadCartFromLocalStorage = async () => {
+    try {
+      const storedCartItems = await AsyncStorage.getItem('cartItems');
+      if (storedCartItems !== null) {
+        setCartItems(JSON.parse(storedCartItems));
+      }
+    } catch (error) {
+      console.error('Failed to load cart from local storage', error);
+    }
+  };
+
+  useEffect(() => {
+    const length = Object.keys(cartItems).length;
+    if(length > 0){
+      saveCartToLocalStorage(cartItems);
+    }
+  }, [cartItems]);
+
+  useEffect(() => {
+    loadCartFromLocalStorage();
+  }, []);
+
+
+
   // const handleGoToCart = async () => {
   //   try {
   //     // Convert cartItems to an array of items with quantity > 0
   //     const selectedItems = Object.entries(cartItems)
-  //       .filter(([itemId, quantity]) => quantity > 0)
-  //       .map(([itemId, quantity]) => ({ id: itemId, quantity }));
-  
+  //     .filter(([itemId, quantity]) => quantity > 0)
+  //     .map(([itemId, quantity]) => ({id: itemId, quantity}));
+
   //     // Make an API call with the selected items
   //     const response = await axios.post('http://10.0.2.2:3001/api/cart', {
   //       cartItems: selectedItems,
   //     });
-  
+
   //     console.log('Cart API response:', response.data);
-  
+
   //     // Navigate to the cart screen with updated cart items
-  //     navigation.navigate('Cart', { cartItems: selectedItems });
+  //     navigation.navigate('Cart', {cartItems: selectedItems});
   //   } catch (error) {
   //     console.error('Error sending cart items to the server:', error);
   //   }
   // };
+
+  // const handleAddToCart = async(itemId: string) => {
+  //   const storedRestaurantId = await AsyncStorage.getItem('restaurantId');
+  //   if(restaurant._id !== storedRestaurantId){
+  //     await AsyncStorage.setItem('restaurantId', restaurant._id);
+  //     await AsyncStorage.removeItem('cartItems');
+  //     setCartItems({});
+  //   }
+  //   setCartItems(prevCart => ({
+  //     ...prevCart,
+  //     [itemId]: (prevCart[itemId] || 0) + 1,
+  //   }));
+  // };
+  // };
+  
+    
+  
   
 
 
@@ -100,6 +142,13 @@ const RestaurantScreen: React.FC<{navigation:any,route:any}> = ({
       
   //     },    }));
   
+  // };
+
+  // const handleRemoveFromCart = (itemId: string) => {
+  //   setCartItems(prevCart => ({
+  //     ...prevCart,
+  //     [itemId]: Math.max((prevCart[itemId] || 1) - 1, 0),
+  //   }));
   // };
 
   // const handleRemoveFromCart = (item: any) => {
@@ -146,6 +195,7 @@ const RestaurantScreen: React.FC<{navigation:any,route:any}> = ({
   return (
     <View style={styles.container}>
       <View style={styles.header}>
+      
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Text style={styles.back}>←</Text>
         </TouchableOpacity>
@@ -155,27 +205,31 @@ const RestaurantScreen: React.FC<{navigation:any,route:any}> = ({
           <Text style={styles.cart}>🛒</Text>
         </TouchableOpacity>
       </View>
+    
+      <Searchbar onSearchQueryChange={setSearchQuery} />
+            
+            
 
-      <FlatList
-        data={menuItems}
-        
-        renderItem={({item}) => (
-         
-          <MenuItem
-          item={item}
-          cartItems= {cartItems}
-          setCartItems={setCartItems}
-        
-        
-       />
-       )}
+        <FlatList
+           data={menuItems}
 
-        keyExtractor={item => item._id}
-      />
+          renderItem={({ item }) => (
+         <MenuItem
+           item={item}
+           cartItems={cartItems}
+           setCartItems={setCartItems}
+           restaurant={restaurant}
+         />)}
+
+         keyExtractor={item => item._id}  
+  
+        />
+
       
       <TouchableOpacity
         style={styles.goToCartButton}
-        onPress={() => navigation.navigate('Cart',{cartItems,setCartItems})}>
+      
+        onPress={() => navigation.navigate('Cart',{restaurant})}>
         <Text style={styles.buttonText}>Go to Cart</Text>
       </TouchableOpacity>
     </View>
@@ -193,8 +247,6 @@ const styles = StyleSheet.create({
   back: {fontSize: 24},
   restaurantName: {fontSize: 24, fontWeight: 'bold'},
   cart: {fontSize: 24},
-  
-
 
   goToCartButton: {
     backgroundColor: '#ff6347',

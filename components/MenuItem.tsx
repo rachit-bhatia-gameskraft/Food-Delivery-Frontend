@@ -1,6 +1,14 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 
+type Restaurant = {
+  name: string;
+  address: string;
+  _id: string;
+  email: string;
+  phone: string;
+};
 interface MenuItemProps {
   item: {
     _id: string;
@@ -16,15 +24,23 @@ interface MenuItemProps {
   
    cartItems: { [key: string]: { item: any, quantity: number }  };  // Passing the entire cartItems state
    setCartItems: React.Dispatch<React.SetStateAction<{ [key: string]: { item: any, quantity: number }  }>>;
+   restaurant : Restaurant
 }
 
 
 
-const MenuItem: React.FC<MenuItemProps> = ({ item,cartItems,setCartItems}) => {
+const MenuItem: React.FC<MenuItemProps> = ({ item,cartItems,setCartItems,restaurant}) => {
    
   //const [cartItems, setCartItems] = useState<{ [key: string]: { item: any, quantity: number } }>({});
 
-  const handleAddToCart = (item: any) => {
+  const handleAddToCart = async(item: any) => {
+
+    const storedRestaurantId = await AsyncStorage.getItem('restaurantId');
+    if(restaurant._id !== storedRestaurantId){
+      await AsyncStorage.setItem('restaurantId', restaurant._id);
+      await AsyncStorage.removeItem('cartItems');
+      setCartItems({});
+    }
     
     setCartItems(prevCart => ({
       ...prevCart,
