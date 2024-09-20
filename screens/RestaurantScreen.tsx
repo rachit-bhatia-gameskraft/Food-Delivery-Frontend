@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 
 import Searchbar from '../components/Searchbar';
-import fetchQueryData from '../utils/fetchUtils';
+import {fetchQueryData,debouncedFetchQueryData} from '../utils/fetchUtils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // type Restaurant = {
@@ -55,8 +55,16 @@ const RestaurantScreen: React.FC<{navigation:any,route:any}> = ({
   const {restaurant} = route.params;
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchQueryData(searchQuery, 'menu',restaurant._id);
-      setMenutItems(data);
+      if(!searchQuery)
+      {
+        const data = await fetchQueryData(searchQuery, 'menu',restaurant._id);
+        setMenutItems(data);
+      }
+      else
+      {
+        const data = await debouncedFetchQueryData(searchQuery, 'menu',restaurant._id);
+        setMenutItems(data);
+      }
     };
     fetchData();
   }, [searchQuery,restaurant._id]);
