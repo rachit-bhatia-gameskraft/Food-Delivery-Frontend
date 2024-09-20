@@ -1,3 +1,4 @@
+
 import React, {useEffect, useState} from 'react';
 import {
   ScrollView,
@@ -18,7 +19,7 @@ type Restaurant = {
   phone: string;
 };
 
-const Home: React.FC<{navigation: any}> = ({navigation}) => {
+const HomeScreen: React.FC<{navigation: any}> = ({navigation}) => {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -35,6 +36,8 @@ const Home: React.FC<{navigation: any}> = ({navigation}) => {
       }, timer);
     };
   };
+
+  
   // const debouncedFetchQueryData = debounce(fetchQueryData, 300);
   useEffect(() => {
     const fetchData = async () => {
@@ -82,4 +85,4 @@ const style = StyleSheet.create({
   },
 });
 
-export default Home;
+export default HomeScreen;
