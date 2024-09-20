@@ -75,6 +75,4 @@ yarn-error.log
 
 .env
 
-components/RestaurantCard.tsx
-screens/HomeScreen.tsx
 
