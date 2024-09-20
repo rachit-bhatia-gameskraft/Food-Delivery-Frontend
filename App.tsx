@@ -5,6 +5,7 @@ import Home from './screens/Home';
 import RestaurantScreen from './screens/RestaurantScreen';
 import CartScreen from './screens/CartScreen';
 import OrderScreen from './screens/OrderScreen';
+import { CartProvider } from './store/CartContext';
 
 type RootStackParamList = {
   Home: undefined;
@@ -17,6 +18,9 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 const App: React.FC = () => {
   return (
+    <CartProvider>
+
+   
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName="Home"
@@ -31,6 +35,7 @@ const App: React.FC = () => {
 
       </Stack.Navigator>
     </NavigationContainer>
+    </CartProvider>
   );
 };
 

@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
+import MenuItem from '../components/MenuItem';
+import { useCart } from '../store/CartContext';
 import {
   View,
   Text,
@@ -9,7 +11,7 @@ import {
   TouchableOpacity,
 
 } from 'react-native';
- import MenuItem from '../components/MenuItem';
+
 // type Restaurant = {
 //   name: string;
 //   address: string;
@@ -18,14 +20,22 @@ import {
 //   phone: string;
 // };
 
+type item= {
+  _id: string;
+  name: string;
+  price: string;
+  imageUrl: string;
+};
+
 
 
 const RestaurantScreen: React.FC<{navigation:any,route:any}> = ({
   route,
   navigation,
 }) => {
-const [cartItems, setCartItems] = useState<{ [key: string]: number }>({});
 
+//const [cartItems, setCartItems] = useState<{ [key: string]: { item: any, quantity: number } }>({});
+ const {cartItems, setCartItems} = useCart();
   const restaurant = route.params.restaurant;
   useEffect(() => {
     fetchMenu(restaurant._id);
@@ -56,47 +66,83 @@ const [cartItems, setCartItems] = useState<{ [key: string]: number }>({});
   };
   
     
-  const handleGoToCart = async () => {
-    try {
-      // Convert cartItems to an array of items with quantity > 0
-      const selectedItems = Object.entries(cartItems)
-        .filter(([itemId, quantity]) => quantity > 0)
-        .map(([itemId, quantity]) => ({ id: itemId, quantity }));
+  // const handleGoToCart = async () => {
+  //   try {
+  //     // Convert cartItems to an array of items with quantity > 0
+  //     const selectedItems = Object.entries(cartItems)
+  //       .filter(([itemId, quantity]) => quantity > 0)
+  //       .map(([itemId, quantity]) => ({ id: itemId, quantity }));
   
-      // Make an API call with the selected items
-      const response = await axios.post('http://10.0.2.2:3001/api/cart', {
-        cartItems: selectedItems,
-      });
+  //     // Make an API call with the selected items
+  //     const response = await axios.post('http://10.0.2.2:3001/api/cart', {
+  //       cartItems: selectedItems,
+  //     });
   
-      console.log('Cart API response:', response.data);
+  //     console.log('Cart API response:', response.data);
   
-      // Navigate to the cart screen with updated cart items
-      navigation.navigate('Cart', { cartItems: selectedItems });
-    } catch (error) {
-      console.error('Error sending cart items to the server:', error);
-    }
-  };
+  //     // Navigate to the cart screen with updated cart items
+  //     navigation.navigate('Cart', { cartItems: selectedItems });
+  //   } catch (error) {
+  //     console.error('Error sending cart items to the server:', error);
+  //   }
+  // };
   
 
 
 
-  const handleAddToCart = (itemId: string) => {
+  // const handleAddToCart = (item: any) => {
     
-    setCartItems(prevCart => ({
-      ...prevCart,
-      [itemId]: (prevCart[itemId] || 0) + 1,
-    }));
+  //   setCartItems(prevCart => ({
+  //     ...prevCart,
+  //     [item._id]:{ 
+  //       item,
+  //       quantity: (prevCart[item._id]?.quantity || 0) + 1
+      
+  //     },    }));
   
-  };
+  // };
 
-  const handleRemoveFromCart = (itemId: string) => {
-    setCartItems(prevCart => ({
-      ...prevCart,
-      [itemId]: Math.max((prevCart[itemId] || 1) - 1, 0),
-    }));
-  };
+  // const handleRemoveFromCart = (item: any) => {
+    
+    
 
-  console.log("carItems",cartItems)
+  //   if(cartItems[item._id]!=undefined){
+  //     setCartItems(prevCart => ({
+  //     ...prevCart,
+  //     [item._id]:{ 
+  //       item,
+  //       quantity: Math.max((prevCart[item._id]?.quantity- 1),0)
+      
+  //     },  }));
+
+    
+  //     if(cartItems[item._id]?.quantity===0){
+        
+  //       setCartItems(prevCart => {
+  //         const updatedCart = { ...prevCart };
+      
+
+          
+  //           delete updatedCart[item._id];
+          
+      
+  //         return updatedCart;
+  //       });
+
+  //     }
+
+  //   }
+    
+    
+    
+
+      
+  // };
+  
+
+  console.log("restaurat",cartItems)
+  
+  
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -105,7 +151,7 @@ const [cartItems, setCartItems] = useState<{ [key: string]: number }>({});
         </TouchableOpacity>
         <Text style={styles.restaurantName}> {restaurant.name}</Text>
         <TouchableOpacity
-          onPress={() => navigation.navigate('Cart', {cartItems})}>
+          onPress={() => navigation.navigate('Cart', {cartItems,setCartItems})}>
           <Text style={styles.cart}>🛒</Text>
         </TouchableOpacity>
       </View>
@@ -117,19 +163,19 @@ const [cartItems, setCartItems] = useState<{ [key: string]: number }>({});
          
           <MenuItem
           item={item}
-        quantity={cartItems[item._id] || 0}
-        handleAddToCart={() => handleAddToCart(item._id)}
-        handleRemoveFromCart={() => handleRemoveFromCart(item._id)}
+          cartItems= {cartItems}
+          setCartItems={setCartItems}
+        
         
        />
        )}
 
-        keyExtractor={item => item.id}
+        keyExtractor={item => item._id}
       />
-
+      
       <TouchableOpacity
         style={styles.goToCartButton}
-        onPress={() => navigation.navigate('Cart',{cartItems})}>
+        onPress={() => navigation.navigate('Cart',{cartItems,setCartItems})}>
         <Text style={styles.buttonText}>Go to Cart</Text>
       </TouchableOpacity>
     </View>
