@@ -23,7 +23,6 @@ const Searchbar: React.FC<any> = ({onSearchQueryChange}) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     padding: 20,
   },
   searchInput: {
@@ -41,7 +40,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightgrey',
   },
   list: {
-    flex: 1,
   },
 });
 
