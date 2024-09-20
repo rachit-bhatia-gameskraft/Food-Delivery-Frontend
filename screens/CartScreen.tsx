@@ -11,8 +11,8 @@ interface CartItem {
 const CartScreen: React.FC<{ navigation: any; route: any }> = ({ navigation, route }) => {
   const cartItems: CartItem[] = Object.entries(route.params.cartItems || {}).map(([id, quantity]) => ({
     id,
-    name: `Item ${id}`, // Replace with actual item names
-    price: `$9.99`, // Replace with actual item prices
+    name: `Item ${id}`,
+    price: `$9.99`, 
     quantity : Number(quantity),
   }));
 
