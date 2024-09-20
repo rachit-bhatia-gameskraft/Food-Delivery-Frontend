@@ -53,11 +53,11 @@ const HomeScreen: React.FC<{navigation: any}> = ({navigation}) => {
 
   return (
     <View style={style.container}>
-      <Searchbar style={style.searchbar} onSearchQueryChange={setSearchQuery} />
+      <Searchbar  onSearchQueryChange={setSearchQuery} />
       {loading ? <Text>loading...</Text> :
       <>
       {error && <Text>{error}</Text>}
-      <ScrollView style={style.list}>
+      <ScrollView >
         {restaurants.map(restaurant => (
           <TouchableOpacity
           key={restaurant._id}

@@ -6,7 +6,9 @@ import RestaurantScreen from './screens/RestaurantScreen';
 import CartScreen from './screens/CartScreen';
 import OrderScreen from './screens/OrderScreen';
 
+
 import { CartProvider } from './store/CartContext';
+
 
 import OrderDetailsScreen from './screens/OrderDetailsScreen';
 

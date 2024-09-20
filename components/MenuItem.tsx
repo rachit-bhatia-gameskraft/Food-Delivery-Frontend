@@ -35,7 +35,9 @@ const MenuItem: React.FC<MenuItemProps> = ({ item,cartItems,setCartItems,restaur
 
   const handleAddToCart = async(item: any) => {
 
+
     const storedRestaurantId = await AsyncStorage.getItem('restaurantId');
+
     if(restaurant._id !== storedRestaurantId){
       await AsyncStorage.setItem('restaurantId', restaurant._id);
       await AsyncStorage.removeItem('cartItems');
@@ -52,7 +54,9 @@ const MenuItem: React.FC<MenuItemProps> = ({ item,cartItems,setCartItems,restaur
   
   };
 
-  const handleRemoveFromCart = (item: any) => {
+
+  const handleRemoveFromCart = async(item: any) => {
+
     
     
 
@@ -65,10 +69,11 @@ const MenuItem: React.FC<MenuItemProps> = ({ item,cartItems,setCartItems,restaur
       
       },  }));
 
+     
     
       if(cartItems[item._id]?.quantity===1){
         
-         setCartItems(prevCart => {
+       setCartItems(prevCart => {
           const updatedCart = { ...prevCart };
       
 
@@ -78,6 +83,25 @@ const MenuItem: React.FC<MenuItemProps> = ({ item,cartItems,setCartItems,restaur
       
           return updatedCart;
         });
+        try {
+          const storedCartItems = await AsyncStorage.getItem('cartItems');
+          
+          if (storedCartItems) {
+            // Parse the existing cart items from local storage
+            const cartItemsObject = JSON.parse(storedCartItems);
+    
+            // Remove the specific item from the cart stored in local storage
+            delete cartItemsObject[item._id];
+    
+            // Update the local storage with the modified cart
+            await AsyncStorage.setItem('cartItems', JSON.stringify(cartItemsObject));
+            console.log('Item removed from local storage:', cartItemsObject);
+          }
+        } catch (error) {
+          console.error('Error removing item from local storage:', error);
+        }
+
+
 
       }
 
@@ -88,7 +112,8 @@ const MenuItem: React.FC<MenuItemProps> = ({ item,cartItems,setCartItems,restaur
 
       
   };
- console.log("Menu", cartItems)
+// console.log("Menu", cartItems)
+
   return (
          <View style={styles.menuItemContainer}>
             <Image source={{uri: item.imageUrl}} style={styles.menuImage} />
@@ -124,6 +149,7 @@ const styles = StyleSheet.create({
     borderColor: '#eee',
     borderRadius: 8,
     backgroundColor: '#fff',
+   
   },
   quantityText: {fontSize: 18, marginHorizontal: 8},
   menuItemContainer: {
@@ -134,8 +160,24 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     overflow: 'hidden',
     backgroundColor: '#fff',
+    padding:10,
   },
-  menuImage: {width: 100, height: 100},
+  menuImage: {
+    
+    
+    // width: 100, height: 120,
+    
+    // borderRadius: 8,
+    // marginRight: 12,
+    // backgroundColor: '#f0f0f0'
+
+    width: 100,
+      height: 120,
+      borderRadius: 8,
+  
+  },
+
+  
   menuDetails: {flex: 1, padding: 8},
   menuName: {fontSize: 16, fontWeight: 'bold'},
   menuPrice: {fontSize: 14, color: '#666'},

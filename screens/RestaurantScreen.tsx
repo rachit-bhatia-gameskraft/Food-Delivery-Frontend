@@ -2,6 +2,10 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import MenuItem from '../components/MenuItem';
 import { useCart } from '../store/CartContext';
+
+import Icon from 'react-native-vector-icons/Ionicons';  
+import BackArrow  from '../assets/backArrow';
+
 import {
   View,
   Text,
@@ -204,8 +208,14 @@ const RestaurantScreen: React.FC<{navigation:any,route:any}> = ({
     <View style={styles.container}>
       <View style={styles.header}>
       
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text style={styles.back}>←</Text>
+
+        <TouchableOpacity onPress={() => navigation.goBack()}style={styles.backButton} >
+           {/* <Text style={[styles.back]}>←</Text> */}
+           <BackArrow/>
+
+   
+        
+
         </TouchableOpacity>
         <Text style={styles.restaurantName}> {restaurant.name}</Text>
         <TouchableOpacity
@@ -218,6 +228,7 @@ const RestaurantScreen: React.FC<{navigation:any,route:any}> = ({
       <Searchbar onSearchQueryChange={setSearchQuery} />
             
             
+
 
         <FlatList
            data={menuItems}
@@ -253,7 +264,30 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
   },
-  back: {fontSize: 24},
+
+  backButton: {
+    backgroundColor: '#FF6347',  // Tomato red background
+    paddingVertical: 8,          // Vertical padding for better touch target
+    paddingHorizontal: 15,       // Horizontal padding to make it rectangular
+    borderRadius: 5,             // Small border radius for a subtle rectangle
+    shadowColor: '#000',         // Shadow for a bit of depth
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,          // Lighter shadow for a cleaner look
+    shadowRadius: 2,
+    elevation: 2,                // Low elevation for Android (small shadow)
+    alignSelf: 'flex-start',     // Align to the left
+    marginLeft: 10,              // Slight margin from the screen's edge
+    marginTop: 10,                           // Optional: Slight margin to the left of the screen
+  },
+  back: {
+    color: '#fff',               // White text color
+    fontSize: 20,                // Slightly larger font size for visibility
+    fontWeight: 'bold',          // Bold text
+  },
+  backIcon: {
+    marginRight: 8,              // Space between the icon and text
+  },
+
   restaurantName: {fontSize: 24, fontWeight: 'bold'},
   cart: {fontSize: 24},
 

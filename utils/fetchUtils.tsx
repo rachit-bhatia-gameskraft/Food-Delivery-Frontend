@@ -6,7 +6,6 @@ const fetchQueryData = async (
   restaurantId?: string,
 ) => {
   try {
-
     let apiUrl = `${REACT_APP_BACKEND_URL}`;
     const params: any = {};
     if (page === 'restaurant') {
