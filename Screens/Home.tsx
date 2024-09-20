@@ -4,6 +4,7 @@ import RestaurantCard from '../components/RestaurantCard';
 import Searchbar from '../components/Searchbar';
 import axios from 'axios';
 import {REACT_APP_BACKEND_URL} from '@env';
+import OrderScreen from './OrderScreen';
 
 type Restaurant = {
   name: string;
