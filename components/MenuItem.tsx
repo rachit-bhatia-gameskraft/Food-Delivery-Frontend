@@ -119,7 +119,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ item,cartItems,setCartItems,restaur
             <Image source={{uri: item.imageUrl}} style={styles.menuImage} />
             <View style={styles.menuDetails}>
               <Text style={styles.menuName}>{item.name}</Text>
-              <Text style={styles.menuPrice}>{item.price}</Text>
+              <Text style={styles.menuPrice}>${item.price}</Text>
               <View style={styles.quantityControls}>
                 <TouchableOpacity
                   onPress={() => handleRemoveFromCart(item)}
