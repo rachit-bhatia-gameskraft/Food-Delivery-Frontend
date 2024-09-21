@@ -100,14 +100,15 @@ const RestaurantCard: React.FC<any> = ({
   rating,
   cuisine,
   website, 
-  deliveryTime
+  deliveryTime,
+  imageUrl,
 }) => {
   const defaultImage = 'https://via.placeholder.com/150'; // Default Image URL
 
   return (
     <View style={styles.card}>
 
-      <Image style={styles.image} source={{ uri: defaultImage }} />
+      <Image style={styles.image} source={{ uri: imageUrl }} />
 
       <View style={styles.details}>
         <Text style={styles.name}>{name}</Text>
