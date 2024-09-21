@@ -12,6 +12,7 @@ type RestaurantProps = {
   rating: number;
   cuisine: string[];
   website: string;
+  deliveryTime:number;
 };
 
 const styles = StyleSheet.create({
@@ -99,6 +100,7 @@ const RestaurantCard: React.FC<any> = ({
   rating,
   cuisine,
   website, 
+  deliveryTime
 }) => {
   const defaultImage = 'https://via.placeholder.com/150'; // Default Image URL
 
@@ -115,7 +117,7 @@ const RestaurantCard: React.FC<any> = ({
           </View>
           <Text style={styles.rating}>{rating}</Text>
           <Text style={styles.dot}>•</Text>
-          <Text style={styles.timings}>5-6 mins</Text>
+          <Text style={styles.timings}>~{deliveryTime} minutes</Text>
         </View>
         <Text style={styles.cuisine}>{cuisine.join(', ')}</Text>
         <Text style={styles.address}>{address}</Text>
