@@ -108,7 +108,9 @@ const RestaurantCard: React.FC<any> = ({
   return (
     <View style={styles.card}>
 
-      <Image style={styles.image} source={{ uri: imageUrl }} />
+      {/* <Image style={styles.image} source={{ uri: imageUrl }} /> */}
+
+      <Image style={styles.image} source={{uri:imageUrl}}/>
 
       <View style={styles.details}>
         <Text style={styles.name}>{name}</Text>

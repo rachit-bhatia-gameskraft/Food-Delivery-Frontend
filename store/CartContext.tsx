@@ -7,7 +7,9 @@ interface CartItem {
   _id: string;
   name: string;
   price: string;
-  imageUrl: string;
+  imageUrl: string
+  restaurant: string;
+  
   }
   quantity: number;
 }
