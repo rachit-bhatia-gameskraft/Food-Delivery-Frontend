@@ -8,6 +8,7 @@ import {
   Text,
   Pressable,
   Modal,
+  ActivityIndicator,
 } from 'react-native';
 import RestaurantCard from '../components/RestaurantCard';
 import Searchbar from '../components/Searchbar';
@@ -16,6 +17,7 @@ import SortIcon from '../assets/sortIcon';import CartIcon from '../assets/cartIc
 import { useCart } from '../store/CartContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import FilterCuisine from '../components/FilterCuisine';
 type Restaurant = {
   name: string;
   address: string;
@@ -25,6 +27,7 @@ type Restaurant = {
   rating:number;
   deliveryTime:number
   imageUrl: string,
+  cuisine:string[]
 };
 
 
@@ -64,6 +67,8 @@ const HomeScreen: React.FC<{navigation: any}> = ({navigation}) => {
   const [sortOption, setSortOption] = useState<string | null>(null);
   const [originalRestaurants, setOriginalRestaurants] = useState<Restaurant[]>([]);
   const [pressed, setPressed] = useState<string | null>('default');
+  const [cuisines,setCuisines] = useState<string[]>([]);
+  const [cuisineMap, setCuisineMap] = useState<Record<string, Restaurant[]>>({});
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -75,6 +80,19 @@ const HomeScreen: React.FC<{navigation: any}> = ({navigation}) => {
           setRestaurants(data);
           setOriginalRestaurants(data);
           setPressed('default');
+          const uniqueCuisines: Set<string> = new Set();
+          data.forEach((restaurant:Restaurant) => {
+          restaurant.cuisine.forEach((cuisine) => {
+            if (!cuisineMap[cuisine]) {
+              cuisineMap[cuisine] = [];
+            }
+            cuisineMap[cuisine].push(restaurant);
+            uniqueCuisines.add(cuisine);
+          });
+        });
+
+        setCuisineMap(cuisineMap);
+        setCuisines(Array.from(uniqueCuisines));
           setLoading(false);
         }
         else
@@ -109,6 +127,15 @@ const HomeScreen: React.FC<{navigation: any}> = ({navigation}) => {
     setSortOption(null);
   };
 
+  const filterByCuisine = (cuisine: string | null) => {
+    if (cuisine) {
+      setRestaurants(cuisineMap[cuisine] || []);
+    } else {
+      setRestaurants([...originalRestaurants]); // Show all restaurants
+    }
+
+  };
+
   return (
     <View style={style.container}>
       <View style={style.top}>
@@ -117,9 +144,10 @@ const HomeScreen: React.FC<{navigation: any}> = ({navigation}) => {
       <SortIcon/>
         </TouchableOpacity>
       </View>
-      {loading ? <Text>loading...</Text> :
+      {loading ? <ActivityIndicator size='large' color='#FF6347' style={style.loader}/> :
       <>
       {error && <Text>{error}</Text>}
+      <FilterCuisine cuisines={cuisines} onCuisineSelect={filterByCuisine}/>
 
      {hasCartItems && (
 
@@ -241,6 +269,10 @@ const style = StyleSheet.create({
     },
     text:{
       color:'#000000',
+    },
+    loader:{
+      flex:1,
+      justifyContent:'center'
     },
     floatingCartButton: {
       position: 'absolute', 
