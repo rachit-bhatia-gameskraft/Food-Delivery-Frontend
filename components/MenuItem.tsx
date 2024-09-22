@@ -34,10 +34,10 @@ const MenuItem: React.FC<MenuItemProps> = ({ item,cartItems,setCartItems,restaur
   //const [cartItems, setCartItems] = useState<{ [key: string]: { item: any, quantity: number } }>({});
 
   const handleAddToCart = async(item: any) => {
-    console.log('handle add to cart ke ander ho bhiaye ji')
+
+
     const storedRestaurantId = await AsyncStorage.getItem('restaurantId');
-    console.log("storeded" , storedRestaurantId)
-     console.log("restaurantId", restaurant);
+
     if(restaurant._id !== storedRestaurantId){
       await AsyncStorage.setItem('restaurantId', restaurant._id);
       await AsyncStorage.removeItem('cartItems');
@@ -54,7 +54,9 @@ const MenuItem: React.FC<MenuItemProps> = ({ item,cartItems,setCartItems,restaur
   
   };
 
+
   const handleRemoveFromCart = async(item: any) => {
+
     
     
 
@@ -66,6 +68,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ item,cartItems,setCartItems,restaur
         quantity: Math.max((prevCart[item._id]?.quantity- 1),0)
       
       },  }));
+
      
     
       if(cartItems[item._id]?.quantity===1){
@@ -110,12 +113,13 @@ const MenuItem: React.FC<MenuItemProps> = ({ item,cartItems,setCartItems,restaur
       
   };
 // console.log("Menu", cartItems)
+
   return (
          <View style={styles.menuItemContainer}>
             <Image source={{uri: item.imageUrl}} style={styles.menuImage} />
             <View style={styles.menuDetails}>
               <Text style={styles.menuName}>{item.name}</Text>
-              <Text style={styles.menuPrice}>{item.price}</Text>
+              <Text style={styles.menuPrice}>${item.price}</Text>
               <View style={styles.quantityControls}>
                 <TouchableOpacity
                   onPress={() => handleRemoveFromCart(item)}

@@ -24,6 +24,7 @@ const Searchbar: React.FC<any> = ({onSearchQueryChange}) => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    flex:1,
   },
   searchInput: {
     height: 40,

@@ -5,8 +5,13 @@ import HomeScreen from './screens/HomeScreen';
 import RestaurantScreen from './screens/RestaurantScreen';
 import CartScreen from './screens/CartScreen';
 import OrderScreen from './screens/OrderScreen';
+
+
 import { CartProvider } from './store/CartContext';
+
+
 import OrderDetailsScreen from './screens/OrderDetailsScreen';
+
 
 type RootStackParamList = {
   Home: undefined;

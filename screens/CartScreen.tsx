@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import MenuItem from '../components/MenuItem';
 import { useCart } from '../store/CartContext';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BackArrow from '../assets/backArrow';
 import axios from 'axios';
@@ -60,6 +61,7 @@ const CartScreen: React.FC<{ navigation: any; route: any }> = ({ navigation, rou
    
   const cartItem: cartItem[] =  Object.values(cartItems || []);
 
+
   console.log("I am inside the cart cartScreen", cartItems)
  
 
@@ -109,9 +111,11 @@ const CartScreen: React.FC<{ navigation: any; route: any }> = ({ navigation, rou
 
 
 
+
   return (
     <View style={styles.container}>
         
+
      
       <View style={styles.row}> 
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
@@ -119,6 +123,7 @@ const CartScreen: React.FC<{ navigation: any; route: any }> = ({ navigation, rou
         </TouchableOpacity>
         <Text style={styles.title}>Your Cart</Text>
        </View>
+
       <FlatList
         data={cartItem}
         renderItem={({ item }) => (
@@ -164,6 +169,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#888',
   },
+
   backButton: {
     backgroundColor: '#FF6347',  // Tomato red background
     paddingVertical: 8,          // Vertical padding for better touch target
@@ -178,6 +184,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,              // Slight margin from the screen's edge
     marginTop: 10,                           // Optional: Slight margin to the left of the screen
   },
+
   back: {fontSize: 24},
   container: { flex: 1, padding: 16, backgroundColor: '#fff' },
   title: { fontSize: 24, fontWeight: 'bold', marginTop: 18, marginLeft:15 },
