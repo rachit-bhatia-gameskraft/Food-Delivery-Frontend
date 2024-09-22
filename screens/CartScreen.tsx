@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import MenuItem from '../components/MenuItem';
 import { useCart } from '../store/CartContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BackArrow from '../assets/backArrow';
+import axios from 'axios';
+import { REACT_APP_BACKEND_URL } from '@env';
 
 
 interface MyItem  {
@@ -32,7 +34,26 @@ interface cartItem extends MyItem{
 
 
 const CartScreen: React.FC<{ navigation: any; route: any }> = ({ navigation, route }) => {
-   const {restaurant}  = route.params;
+   const {restaurantId}  = route.params;
+   const [restaurant, setRestaurant] = useState<Restaurant >();
+   useEffect(() => {
+    
+    const fetchRestaurant = async () => {
+      try {
+        const response = await axios.get(`${REACT_APP_BACKEND_URL}/api/restaurant/${restaurantId}`);
+       setRestaurant(response.data);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching restaurant details:', err);
+        setError('Failed to fetch restaurant details');
+        setLoading(false);
+      }
+    };
+
+    if (restaurantId) {
+      fetchRestaurant();
+    }
+  }, [restaurantId]);
    const { cartItems , setCartItems} = useCart();
 
    //console.log("tyoe of function",typeof(handleAddToCart))
@@ -118,12 +139,18 @@ const CartScreen: React.FC<{ navigation: any; route: any }> = ({ navigation, rou
       <View style={styles.totalContainer}>
         <Text style={styles.totalText}>Total: ${totalAmount.toFixed(2)}</Text>
       </View>
-      <TouchableOpacity
-        style={styles.checkoutButton}
-        onPress={() => navigation.navigate('Order')}
-      >
-        <Text style={styles.buttonText}>Checkout</Text>
-      </TouchableOpacity>
+
+      { Object.keys(cartItems).length> 0 && (
+
+      <TouchableOpacity 
+       style={styles.checkoutButton}
+      onPress={() => navigation.navigate('Order')}
+       >
+     <Text style={styles.buttonText}>Checkout</Text>
+       </TouchableOpacity>
+  
+)}
+      
     </View>
   );
 };
@@ -153,7 +180,7 @@ const styles = StyleSheet.create({
   },
   back: {fontSize: 24},
   container: { flex: 1, padding: 16, backgroundColor: '#fff' },
-  title: { fontSize: 24, fontWeight: 'bold', marginTop: 10, marginLeft:10 },
+  title: { fontSize: 24, fontWeight: 'bold', marginTop: 18, marginLeft:15 },
   cartItem: { flexDirection: 'row', justifyContent: 'space-between', padding: 8, borderBottomWidth: 1, borderBottomColor: '#ddd' },
   itemName: { fontSize: 16 },
   itemDetails: { fontSize: 16, color: '#666' },
@@ -170,3 +197,11 @@ const styles = StyleSheet.create({
 });
 
 export default CartScreen;
+function setError(arg0: string) {
+  throw new Error('Function not implemented.');
+}
+
+function setLoading(arg0: boolean) {
+  throw new Error('Function not implemented.');
+}
+

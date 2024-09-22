@@ -59,6 +59,7 @@ const RestaurantScreen: React.FC<{navigation:any,route:any}> = ({
       {
         const data = await fetchQueryData(searchQuery, 'menu',restaurant._id);
         setMenutItems(data);
+        console.log(data)
       }
       else
       {
@@ -199,7 +200,7 @@ const RestaurantScreen: React.FC<{navigation:any,route:any}> = ({
   // };
   
 
-  console.log("restaurat",cartItems)
+  console.log("cartItems",cartItems)
   
   
   return (
@@ -214,10 +215,10 @@ const RestaurantScreen: React.FC<{navigation:any,route:any}> = ({
         
         </TouchableOpacity>
         <Text style={styles.restaurantName}> {restaurant.name}</Text>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => navigation.navigate('Cart', {cartItems,setCartItems})}>
           <Text style={styles.cart}>🛒</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     
       <Searchbar onSearchQueryChange={setSearchQuery} />
@@ -240,12 +241,16 @@ const RestaurantScreen: React.FC<{navigation:any,route:any}> = ({
         />
 
       
-      <TouchableOpacity
-        style={styles.goToCartButton}
       
-        onPress={() => navigation.navigate('Cart',{restaurant})}>
-        <Text style={styles.buttonText}>Go to Cart</Text>
-      </TouchableOpacity>
+{ Object.keys(cartItems).length> 0 && (
+  <TouchableOpacity
+    style={styles.goToCartButton}
+    onPress={() => navigation.navigate('Cart', { id: restaurant._id })}
+  >
+    <Text style={styles.buttonText}>Go to Cart</Text>
+  </TouchableOpacity>
+)}
+
     </View>
   );
 };
@@ -254,7 +259,7 @@ const styles = StyleSheet.create({
   container: {flex: 1, padding: 16, backgroundColor: '#fff'},
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    //justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 16,
   },
@@ -282,7 +287,12 @@ const styles = StyleSheet.create({
     marginRight: 8,              // Space between the icon and text
   },
 
-  restaurantName: {fontSize: 24, fontWeight: 'bold'},
+  restaurantName: {
+    marginRight:18,
+    marginTop:10,
+    fontSize: 24, fontWeight: 'bold',
+    paddingLeft:50
+  },
   cart: {fontSize: 24},
 
   goToCartButton: {
