@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { useCart } from '../store/CartContext';
 
 type Restaurant = {
   name: string;
@@ -22,20 +23,20 @@ interface MenuItemProps {
   //handleAddToCart: (item: { _id: string; name: string; price: string; imageUrl: string }) => void;
   //handleRemoveFromCart: (item: { _id: string; name: string; price: string; imageUrl: string }) => void;
   
-   cartItems: { [key: string]: { item: any, quantity: number }  };  // Passing the entire cartItems state
-   setCartItems: React.Dispatch<React.SetStateAction<{ [key: string]: { item: any, quantity: number }  }>>;
+  //  cartItems: { [key: string]: { item: any, quantity: number }  };  // Passing the entire cartItems state
+  //  setCartItems: React.Dispatch<React.SetStateAction<{ [key: string]: { item: any, quantity: number }  }>>;
    restaurant : Restaurant
 }
 
 
 
-const MenuItem: React.FC<MenuItemProps> = ({ item,cartItems,setCartItems,restaurant}) => {
+const MenuItem: React.FC<MenuItemProps> = ({ item,restaurant}) => {
    
   //const [cartItems, setCartItems] = useState<{ [key: string]: { item: any, quantity: number } }>({});
-
+  const { cartItems , setCartItems} = useCart();
   const handleAddToCart = async(item: any) => {
 
-
+   console.log("restaurantId ",restaurant)
     const storedRestaurantId = await AsyncStorage.getItem('restaurantId');
 
     if(restaurant._id !== storedRestaurantId){

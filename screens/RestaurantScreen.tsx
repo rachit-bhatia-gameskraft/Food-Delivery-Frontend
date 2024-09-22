@@ -237,8 +237,7 @@ const RestaurantScreen: React.FC<{navigation:any,route:any}> = ({
           renderItem={({ item }) => (
          <MenuItem
            item={item}
-           cartItems={cartItems}
-           setCartItems={setCartItems}
+           
            restaurant={restaurant}
          />)}
 
@@ -251,7 +250,7 @@ const RestaurantScreen: React.FC<{navigation:any,route:any}> = ({
 { Object.keys(cartItems).length> 0 && (
   <TouchableOpacity
     style={styles.goToCartButton}
-    onPress={() => navigation.navigate('Cart', { id: restaurant._id })}
+    onPress={() => navigation.navigate('Cart',  restaurant._id )}
   >
     <Text style={styles.buttonText}>Go to Cart</Text>
   </TouchableOpacity>

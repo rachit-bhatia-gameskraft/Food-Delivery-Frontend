@@ -35,7 +35,9 @@ const HomeScreen: React.FC<{navigation: any}> = ({navigation}) => {
   const { cartItems , setCartItems} = useCart();
   const hasCartItems = Object.keys(cartItems).length > 0;
   const firstCartItem = Object.values(cartItems)[0]; // Get the first item in the cart (if it exists)
+  console.log("firstItem",firstCartItem)
   const restaurantId = firstCartItem?.item?.restaurant;
+  console.log(restaurantId)
 
   const loadCartFromLocalStorage = async () => {
     try {
@@ -123,7 +125,7 @@ const HomeScreen: React.FC<{navigation: any}> = ({navigation}) => {
 
       <TouchableOpacity
         style={style.floatingCartButton}
-        onPress={() => navigation.navigate('Cart',{cartItems, restaurantId})}
+        onPress={() => navigation.navigate('Cart', restaurantId)}
       >
         <Text style={style.cartText}><CartIcon/></Text>
       </TouchableOpacity>
