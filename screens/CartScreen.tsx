@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import BackArrow from '../assets/backArrow';
 import axios from 'axios';
 import { REACT_APP_BACKEND_URL } from '@env';
-
+const userId = "60b6bdf9d2a9b818a4b49a76";
 
 interface MyItem  {
   
@@ -153,7 +153,7 @@ const CartScreen: React.FC<{ navigation: any; route: any }> = ({ navigation, rou
 
       <TouchableOpacity 
        style={styles.checkoutButton}
-      onPress={() => navigation.navigate('Order')}
+      onPress={() => navigation.navigate('Order', {userId})}
        >
      <Text style={styles.buttonText}>Checkout</Text>
        </TouchableOpacity>
