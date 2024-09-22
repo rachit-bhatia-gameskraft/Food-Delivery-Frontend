@@ -35,13 +35,16 @@ interface cartItem extends MyItem{
 
 
 const CartScreen: React.FC<{ navigation: any; route: any }> = ({ navigation, route }) => {
-   const {restaurantId}  = route.params;
+   const restaurantId  = route.params.id;
+   
    const [restaurant, setRestaurant] = useState<Restaurant >();
    useEffect(() => {
+    
     
     const fetchRestaurant = async () => {
       try {
         const response = await axios.get(`${REACT_APP_BACKEND_URL}/api/restaurant/${restaurantId}`);
+        
        setRestaurant(response.data);
         setLoading(false);
       } catch (err) {
@@ -54,7 +57,7 @@ const CartScreen: React.FC<{ navigation: any; route: any }> = ({ navigation, rou
     if (restaurantId) {
       fetchRestaurant();
     }
-  }, [restaurantId]);
+  }, []);
    const { cartItems , setCartItems} = useCart();
 
    //console.log("tyoe of function",typeof(handleAddToCart))
