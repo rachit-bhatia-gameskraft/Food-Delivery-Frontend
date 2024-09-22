@@ -35,7 +35,8 @@ interface cartItem extends MyItem{
 
 
 const CartScreen: React.FC<{ navigation: any; route: any }> = ({ navigation, route }) => {
-   const restaurantId  = route.params.id;
+   const restaurantId  = route.params;
+   console.log("RestaurantKiId",restaurantId)
    
    const [restaurant, setRestaurant] = useState<Restaurant >();
    useEffect(() => {
@@ -57,7 +58,7 @@ const CartScreen: React.FC<{ navigation: any; route: any }> = ({ navigation, rou
     if (restaurantId) {
       fetchRestaurant();
     }
-  }, []);
+  }, [restaurantId]);
    const { cartItems , setCartItems} = useCart();
 
    //console.log("tyoe of function",typeof(handleAddToCart))
