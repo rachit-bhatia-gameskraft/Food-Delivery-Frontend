@@ -266,7 +266,7 @@ const OrderDetailsScreen: React.FC<{ route: any }> = ({ route }) => {
         </View>
         <View style={styles.section}>
           <Text style={styles.header}>Total Price</Text>
-          <Text style={styles.value}>₹{orderDetails.totalPrice}</Text>
+          <Text style={styles.value}>${orderDetails.totalPrice}</Text>
         </View>
         <View style={styles.section}>
           <Text style={styles.header}>Date & Time</Text>
@@ -278,7 +278,7 @@ const OrderDetailsScreen: React.FC<{ route: any }> = ({ route }) => {
           <View key={index} style={styles.itemCard}>
             <Text style={styles.itemText}>Dish ID: {item.dish}</Text>
             <Text style={styles.itemText}>Quantity: {item.quantity}</Text>
-            <Text style={styles.itemText}>Price: ₹{item.price}</Text>
+            <Text style={styles.itemText}>Price: ${item.price}</Text>
           </View>
         ))}
       </View>
