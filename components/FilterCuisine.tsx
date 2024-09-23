@@ -48,16 +48,6 @@ const FilterCuisine: React.FC<FilterCuisineProps> = ({
           </TouchableOpacity>
         ))}
       </ScrollView>
-      {selectedCuisine && (
-        <TouchableOpacity
-          style={styles.clearButton}
-          onPress={() => {
-            setSelectedCuisine(null);
-            onCuisineSelect(null);
-          }}>
-          <Text style={styles.clearButtonText}>Clear Filter</Text>
-        </TouchableOpacity>
-      )}
     </View>
   );
 };
