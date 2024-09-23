@@ -41,7 +41,6 @@ const CartScreen: React.FC<{ navigation: any; route: any }> = ({ navigation, rou
    
    const totalAmount = cartItemArray.reduce((total, item) => {
      const numericPrice = item.finalPrice;
-     console.log(numericPrice);
      return total + numericPrice * item.quantity;
    }, 0);
 
