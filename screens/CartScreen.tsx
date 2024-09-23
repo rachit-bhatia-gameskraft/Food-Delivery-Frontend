@@ -40,7 +40,8 @@ const CartScreen: React.FC<{ navigation: any; route: any }> = ({ navigation, rou
    const cartItemArray: cartItem[] = Object.values(cartItems || []);
    
    const totalAmount = cartItemArray.reduce((total, item) => {
-     const numericPrice = parseFloat(item.item.price);
+     const numericPrice = item.finalPrice;
+     console.log(numericPrice);
      return total + numericPrice * item.quantity;
    }, 0);
 
