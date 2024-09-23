@@ -58,7 +58,8 @@ const HomeScreen: React.FC<{navigation: any}> = ({navigation}) => {
   useEffect(() => {
     loadCartFromLocalStorage();
   }, []);
-  console.log("Home Screen CartItems",cartItems)
+  // console.log("Home Screen CartItems",cartItems)
+  
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -69,6 +70,8 @@ const HomeScreen: React.FC<{navigation: any}> = ({navigation}) => {
   const [pressed, setPressed] = useState<string | null>('default');
   const [cuisines,setCuisines] = useState<string[]>([]);
   const [cuisineMap, setCuisineMap] = useState<Record<string, Restaurant[]>>({});
+  
+  console.log("CUISINEMAP",cuisineMap)
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -86,7 +89,13 @@ const HomeScreen: React.FC<{navigation: any}> = ({navigation}) => {
             if (!cuisineMap[cuisine]) {
               cuisineMap[cuisine] = [];
             }
-            cuisineMap[cuisine].push(restaurant);
+            const isRestaurantAlreadyPresent = cuisineMap[cuisine].some(
+              (existingRestaurant) => existingRestaurant._id === restaurant._id
+            );
+            if (!isRestaurantAlreadyPresent)
+            {
+              cuisineMap[cuisine].push(restaurant);
+            }
             uniqueCuisines.add(cuisine);
           });
         });
