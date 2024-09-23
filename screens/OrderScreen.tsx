@@ -278,7 +278,7 @@
 
 //Best try:
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, FlatList, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, FlatList, ScrollView, RefreshControl} from 'react-native';
 import axios from 'axios';
 import OrderCard from '../components/OrderCard'; // Import the OrderCard component
 
@@ -286,6 +286,12 @@ const OrderScreen: React.FC<{ navigation: any, route: any }> = ({ navigation, ro
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const { userId } = route.params;
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = async () => {
+    setRefreshing(true); // Start refreshing
+    await fetchOrderHistory(); // Refresh order details
+    setRefreshing(false); // Stop refreshing
+  };
 
   useEffect(() => {
     fetchOrderHistory();
@@ -315,7 +321,9 @@ const OrderScreen: React.FC<{ navigation: any, route: any }> = ({ navigation, ro
   const otherOrders = orders.filter(order => order.status !== 'Pending');
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={true}>
+    <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={true}  refreshControl={
+      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+    }>
       <View style={styles.container}>
         {/* Heading */}
         <Text style={styles.heading}>All Your Orders Here:</Text>
