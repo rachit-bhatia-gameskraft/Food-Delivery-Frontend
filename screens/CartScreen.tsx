@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
-import MenuItem from '../components/MenuItem';
+import CartMenuItem from '../components/CartMenuItem';
 import { useCart } from '../store/CartContext';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -30,6 +30,7 @@ interface cartItem extends MyItem{
     imageUrl: string;
   };
   quantity: number;
+  finalPrice:number;
 }
 
 
@@ -39,17 +40,16 @@ const CartScreen: React.FC<{ navigation: any; route: any }> = ({ navigation, rou
 
    const { cartItems , setCartItems} = useCart();
 
-   //console.log("tyoe of function",typeof(handleAddToCart))
    
   const cartItem: cartItem[] =  Object.values(cartItems || []);
 
 
-  console.log("I am inside the cart cartScreen", cartItems)
+  console.log("I am inside the cart cartScreen", cartItem)
  
 
   const totalAmount = cartItem.reduce((total, item) => {
     
-    const numericPrice = parseFloat(item.item.price);
+    const numericPrice = parseFloat(item.finalPrice);
     
     return total + numericPrice * item.quantity;
   }, 0);
@@ -79,7 +79,6 @@ const CartScreen: React.FC<{ navigation: any; route: any }> = ({ navigation, rou
   };
 
   useEffect(() => {
-    console.log("Useeffect ke ander")
     const length = Object.keys(cartItems).length;
     if(length > 0){
       saveCartToLocalStorage(cartItems);
@@ -107,14 +106,10 @@ const CartScreen: React.FC<{ navigation: any; route: any }> = ({ navigation, rou
        </View>
 
       <FlatList
-        data={cartItem}
+        data={cartItems}
         renderItem={({ item }) => (
-          // <View style={styles.cartItem}>
-          //   <Text style={styles.itemName}>{item.item.name}</Text>
-          //   <Text style={styles.itemDetails}>{item.quantity} x {item.item.price}</Text>
-          // </View>
-          <MenuItem
-          item={item.item} // Pass the item details
+          <CartMenuItem
+          item={item} 
           cartItems={cartItems}
           setCartItems={setCartItems}
           restaurant={restaurant}

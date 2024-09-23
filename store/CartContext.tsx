@@ -1,25 +1,29 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-// Define the shape of the cart item state
-interface CartItem {
-
-  item:{  
+interface AddOn {
   _id: string;
   name: string;
-  price: string;
-  imageUrl: string;
-  }
+  price: number;
+}
+
+interface CartItem {
+  item: {  
+    _id: string;
+    name: string;
+    price: string;
+    imageUrl: string;
+  };
+  addOn: AddOn[];
+  finalPrice: number;
   quantity: number;
 }
 
 interface CartContextType {
-  cartItems: { [key: string]: CartItem };
-  setCartItems: React.Dispatch<React.SetStateAction<{ [key: string]: CartItem }>>;
+  cartItems: CartItem[]; // Change from object to array
+  setCartItems: React.Dispatch<React.SetStateAction<CartItem[]>>; // Update setter
 }
 
-
 const CartContext = createContext<CartContextType | undefined>(undefined);
-
 
 export const useCart = () => {
   const context = useContext(CartContext);
@@ -31,7 +35,8 @@ export const useCart = () => {
 
 // CartProvider to wrap around components that need access to the cart
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [cartItems, setCartItems] = useState<{ [key: string]: CartItem }>({});
+  // Initialize cartItems as an array instead of an object
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   return (
     <CartContext.Provider value={{ cartItems, setCartItems }}>

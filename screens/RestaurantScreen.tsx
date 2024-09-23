@@ -41,14 +41,7 @@ const RestaurantScreen: React.FC<{navigation:any,route:any}> = ({
   route,
   navigation,
 }) => {
- // const [cartItems, setCartItems] = useState<{ [key: string]: number }>({});
-
-//const [cartItems, setCartItems] = useState<{ [key: string]: { item: any, quantity: number } }>({});
  const {cartItems, setCartItems} = useCart();
- // const restaurant = route.params.restaurant;
-  // useEffect(() => {
-  //   fetchMenu(restaurant._id);
-  // }, [restaurant._id]);
 
   const [menuItems, setMenutItems] = useState();
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -91,131 +84,22 @@ const RestaurantScreen: React.FC<{navigation:any,route:any}> = ({
   };
 
   useEffect(() => {
-    const length = Object.keys(cartItems).length;
-    if(length > 0){
-      saveCartToLocalStorage(cartItems);
+    if (cartItems.length > 0) {  
+      saveCartToLocalStorage(cartItems); 
     }
-  }, [cartItems]);
+  }, [cartItems]); 
+  
 
   useEffect(() => {
     loadCartFromLocalStorage();
   }, []);
-
-
-
-  // const handleGoToCart = async () => {
-  //   try {
-  //     // Convert cartItems to an array of items with quantity > 0
-  //     const selectedItems = Object.entries(cartItems)
-  //     .filter(([itemId, quantity]) => quantity > 0)
-  //     .map(([itemId, quantity]) => ({id: itemId, quantity}));
-
-  //     // Make an API call with the selected items
-  //     const response = await axios.post('http://10.0.2.2:3001/api/cart', {
-  //       cartItems: selectedItems,
-  //     });
-
-  //     console.log('Cart API response:', response.data);
-
-  //     // Navigate to the cart screen with updated cart items
-  //     navigation.navigate('Cart', {cartItems: selectedItems});
-  //   } catch (error) {
-  //     console.error('Error sending cart items to the server:', error);
-  //   }
-  // };
-
-  // const handleAddToCart = async(itemId: string) => {
-  //   const storedRestaurantId = await AsyncStorage.getItem('restaurantId');
-  //   if(restaurant._id !== storedRestaurantId){
-  //     await AsyncStorage.setItem('restaurantId', restaurant._id);
-  //     await AsyncStorage.removeItem('cartItems');
-  //     setCartItems({});
-  //   }
-  //   setCartItems(prevCart => ({
-  //     ...prevCart,
-  //     [itemId]: (prevCart[itemId] || 0) + 1,
-  //   }));
-  // };
-  // };
-  
-    
-  
-  
-
-
-
-  // const handleAddToCart = (item: any) => {
-    
-  //   setCartItems(prevCart => ({
-  //     ...prevCart,
-  //     [item._id]:{ 
-  //       item,
-  //       quantity: (prevCart[item._id]?.quantity || 0) + 1
-      
-  //     },    }));
-  
-  // };
-
-  // const handleRemoveFromCart = (itemId: string) => {
-  //   setCartItems(prevCart => ({
-  //     ...prevCart,
-  //     [itemId]: Math.max((prevCart[itemId] || 1) - 1, 0),
-  //   }));
-  // };
-
-  // const handleRemoveFromCart = (item: any) => {
-    
-    
-
-  //   if(cartItems[item._id]!=undefined){
-  //     setCartItems(prevCart => ({
-  //     ...prevCart,
-  //     [item._id]:{ 
-  //       item,
-  //       quantity: Math.max((prevCart[item._id]?.quantity- 1),0)
-      
-  //     },  }));
-
-    
-  //     if(cartItems[item._id]?.quantity===0){
-        
-  //       setCartItems(prevCart => {
-  //         const updatedCart = { ...prevCart };
-      
-
-          
-  //           delete updatedCart[item._id];
-          
-      
-  //         return updatedCart;
-  //       });
-
-  //     }
-
-  //   }
-    
-    
-    
-
-      
-  // };
-  
-
-  console.log("restaurat",cartItems)
   
   
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-      
-
         <TouchableOpacity onPress={() => navigation.goBack()}style={styles.backButton} >
-           {/* <Text style={[styles.back]}>←</Text> */}
            <BackArrow/>
-
-   
-        
-
         </TouchableOpacity>
         <Text style={styles.restaurantName}> {restaurant.name}</Text>
         <TouchableOpacity
@@ -223,13 +107,7 @@ const RestaurantScreen: React.FC<{navigation:any,route:any}> = ({
           <Text style={styles.cart}>🛒</Text>
         </TouchableOpacity>
       </View>
-
-    
       <Searchbar onSearchQueryChange={setSearchQuery} />
-            
-            
-
-
         <FlatList
            data={menuItems}
 
@@ -244,11 +122,8 @@ const RestaurantScreen: React.FC<{navigation:any,route:any}> = ({
          keyExtractor={item => item._id}  
   
         />
-
-      
       <TouchableOpacity
         style={styles.goToCartButton}
-      
         onPress={() => navigation.navigate('Cart',{restaurant})}>
         <Text style={styles.buttonText}>Go to Cart</Text>
       </TouchableOpacity>
