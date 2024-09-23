@@ -47,14 +47,14 @@ const CartMenuItem: React.FC<MenuItemProps> = ({ item,cartItems,setCartItems,res
 
 
    const handleAddToCart = async (item: any) => {
-    const storedRestaurantId = await AsyncStorage.getItem('restaurantId');
+    // const storedRestaurantId = await AsyncStorage.getItem('restaurantId');
   
     // If the restaurant is different, clear the cart and set the new restaurant ID
-    if (restaurant._id !== storedRestaurantId) {
-      await AsyncStorage.setItem('restaurantId', restaurant._id);
-      await AsyncStorage.removeItem('cartItems');
-      setCartItems([]); // Clear cart items
-    }
+    // if (restaurant._id !== storedRestaurantId) {
+    //   await AsyncStorage.setItem('restaurantId', restaurant._id);
+    //   await AsyncStorage.removeItem('cartItems');
+    //   setCartItems([]); // Clear cart items
+    // }
   
     // Check if the exact item (full object comparison) already exists in the cart
     const existingCartItem = cartItems.find(

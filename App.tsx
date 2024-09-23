@@ -18,6 +18,7 @@ type RootStackParamList = {
   Restaurant: undefined;
   Cart: undefined;
   Order: undefined;
+  OrderDetails:undefined
 };
 
 const Stack = createStackNavigator<RootStackParamList>();

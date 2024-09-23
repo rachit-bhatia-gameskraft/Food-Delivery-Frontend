@@ -1,14 +1,16 @@
+import { useRoute } from '@react-navigation/native';
 import React, {useState} from 'react';
 import {View, TextInput, StyleSheet} from 'react-native';
 const Searchbar: React.FC<any> = ({onSearchQueryChange}) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
+const route = useRoute();
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     onSearchQueryChange(query);
   };
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,route.name === 'Home' && styles.searchbarheight]}>
       <View style={styles.list}>
         <TextInput
           style={styles.searchInput}
@@ -22,9 +24,11 @@ const Searchbar: React.FC<any> = ({onSearchQueryChange}) => {
 };
 
 const styles = StyleSheet.create({
+  searchbarheight:{
+    flex:1,
+  },
   container: {
     padding: 20,
-    flex:1,
   },
   searchInput: {
     height: 40,

@@ -4,6 +4,7 @@ import { View, Text, Image, TouchableOpacity, StyleSheet,Modal,ScrollView} from 
 import CheckBox from '@react-native-community/checkbox';
    
 import axios from 'axios';
+import { useCart } from '../store/CartContext';
 type Restaurant = {
   name: string;
   address: string;
@@ -46,8 +47,8 @@ interface MenuItemProps {
 
 
 
-const MenuItem: React.FC<MenuItemProps> = ({ item,cartItems,setCartItems,restaurant}) => {
-   
+const MenuItem: React.FC<MenuItemProps> = ({ item,restaurant}) => {
+  const {cartItems , setCartItems} = useCart();
   const [selectedAddOns, setSelectedAddOns] = useState<AddOn[]>([]);
   const [showAddOnModal, setShowAddOnModal] = useState(false); 
   const [checkedAddOns, setCheckedAddOns] = useState<string[]>([]);

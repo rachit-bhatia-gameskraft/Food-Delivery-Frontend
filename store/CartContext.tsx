@@ -12,10 +12,12 @@ interface CartItem {
     name: string;
     price: string;
     imageUrl: string;
+    restaurant: string;
   };
   addOn: AddOn[];
   finalPrice: number;
   quantity: number;
+
 }
 
 interface CartContextType {
