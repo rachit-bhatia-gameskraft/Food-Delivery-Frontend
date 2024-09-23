@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import MenuItem from '../components/MenuItem';
 import { useCart } from '../store/CartContext';
 
@@ -7,12 +7,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import BackArrow from '../assets/backArrow';
 import axios from 'axios';
 import { REACT_APP_BACKEND_URL } from '@env';
-
+const userId = "60b6bdf9d2a9b818a4b49a76";  // Hardcoded userId
 
 interface MyItem  {
-  
-  //handleAddToCart: (item: { _id: string; name: string; price: string; imageUrl: string }) => void;
-  //handleRemoveFromCart: (item: { _id: string; name: string; price: string; imageUrl: string }) => void;
+  // Empty for now, but can be filled with other relevant props
 }
 
 type Restaurant = {
@@ -23,7 +21,7 @@ type Restaurant = {
   phone: string;
 };
 
-interface cartItem extends MyItem{
+interface cartItem extends MyItem {
   item: {
     _id: string;
     name: string;
@@ -33,186 +31,109 @@ interface cartItem extends MyItem{
   quantity: number;
 }
 
-
 const CartScreen: React.FC<{ navigation: any; route: any }> = ({ navigation, route }) => {
-   const restaurantId  = route.params;
-   console.log("RestaurantKiId",restaurantId)
+   const restaurantId = route.params;
+   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
+   const { cartItems, setCartItems } = useCart();
+   const cartItemArray: cartItem[] = Object.values(cartItems || []);
    
-   const [restaurant, setRestaurant] = useState<Restaurant >();
+   const totalAmount = cartItemArray.reduce((total, item) => {
+     const numericPrice = parseFloat(item.item.price);
+     return total + numericPrice * item.quantity;
+   }, 0);
+
+   // Fetch restaurant details
    useEffect(() => {
-    
-    
-    const fetchRestaurant = async () => {
-      try {
-        const response = await axios.get(`${REACT_APP_BACKEND_URL}/api/restaurant/${restaurantId}`);
-        
-       setRestaurant(response.data);
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching restaurant details:', err);
-        setError('Failed to fetch restaurant details');
-        setLoading(false);
-      }
-    };
+     const fetchRestaurant = async () => {
+       try {
+         const response = await axios.get(`${REACT_APP_BACKEND_URL}/api/restaurant/${restaurantId}`);
+         setRestaurant(response.data);
+       } catch (err) {
+         console.error('Error fetching restaurant details:', err);
+       }
+     };
+     if (restaurantId) {
+       fetchRestaurant();
+     }
+   }, [restaurantId]);
 
-    if (restaurantId) {
-      fetchRestaurant();
-    }
-  }, [restaurantId]);
-   const { cartItems , setCartItems} = useCart();
+   // Place order function
+   const placeOrder = async () => {
+     try {
+       const orderData = {
+         items: cartItemArray.map(item => ({
+           dish: item.item._id,
+           quantity: item.quantity,
+           price: item.item.price,
+         })),
+         deliveryAddress: restaurant ? restaurant.address : '123 Main St',  // Example address
+         totalPrice: totalAmount,
+       };
+       const response = await axios.post(`http://10.0.2.2:3001/api/order/user/${userId}/orders`, orderData);
+       Alert.alert('Order placed successfully', `Order ID: ${response.data.order._id}`);
+       setCartItems({});  // Clear cart after placing the order
+       navigation.navigate('Order', { userId });  // Redirect to the Order screen
+     } catch (error) {
+       console.error('Error placing order:', error);
+       Alert.alert('Error', 'Failed to place the order.');
+     }
+   };
 
-   //console.log("tyoe of function",typeof(handleAddToCart))
-   
-  const cartItem: cartItem[] =  Object.values(cartItems || []);
-
-
-  console.log("I am inside the cart cartScreen", cartItems)
- 
-
-  const totalAmount = cartItem.reduce((total, item) => {
-    
-    const numericPrice = parseFloat(item.item.price);
-    
-    return total + numericPrice * item.quantity;
-  }, 0);
-  
-
-
-
-  
-
-  const saveCartToLocalStorage = async (items : object) => {
-    try {
-      await AsyncStorage.setItem('cartItems', JSON.stringify(items));
-    } catch (error) {
-      console.error('Failed to save cart to local storage', error);
-    }
-  };
-
-  const loadCartFromLocalStorage = async () => {
-    try {
-      const storedCartItems = await AsyncStorage.getItem('cartItems');
-      if (storedCartItems !== null) {
-        setCartItems(JSON.parse(storedCartItems));
-      }
-    } catch (error) {
-      console.error('Failed to load cart from local storage', error);
-    }
-  };
-
-  useEffect(() => {
-    console.log("Useeffect ke ander")
-    const length = Object.keys(cartItems).length;
-    if(length > 0){
-      saveCartToLocalStorage(cartItems);
-    }
-  }, [cartItems]);
-
-  useEffect(() => {
-    loadCartFromLocalStorage();
-  }, []);
-
-
-
-
-
-  return (
-    <View style={styles.container}>
-        
-
-     
-      <View style={styles.row}> 
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <BackArrow/>
-        </TouchableOpacity>
-        <Text style={styles.title}>Your Cart</Text>
+   return (
+     <View style={styles.container}>
+       <View style={styles.row}> 
+         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+           <BackArrow/>
+         </TouchableOpacity>
+         <Text style={styles.title}>Your Cart</Text>
        </View>
 
-      <FlatList
-        data={cartItem}
-        renderItem={({ item }) => (
-          // <View style={styles.cartItem}>
-          //   <Text style={styles.itemName}>{item.item.name}</Text>
-          //   <Text style={styles.itemDetails}>{item.quantity} x {item.item.price}</Text>
-          // </View>
-          <MenuItem
-          item={item.item} // Pass the item details
-          cartItems={cartItems}
-          setCartItems={setCartItems}
-          restaurant={restaurant}
-          
-        />
+       <FlatList
+         data={cartItemArray}
+         renderItem={({ item }) => (
+           <MenuItem
+             item={item.item}  // Pass the item details
+             cartItems={cartItems}
+             setCartItems={setCartItems}
+             restaurant={restaurant}
+           />
+         )}
+         keyExtractor={(item) => item.item._id}
+       />
+       <View style={styles.totalContainer}>
+         <Text style={styles.totalText}>Total: ₹{totalAmount.toFixed(2)}</Text>
+       </View>
+
+       { Object.keys(cartItems).length > 0 && (
+         <TouchableOpacity 
+           style={styles.checkoutButton}
+           onPress={placeOrder}  // Trigger the placeOrder function
+         >
+           <Text style={styles.buttonText}>Checkout</Text>
+         </TouchableOpacity>
        )}
-        keyExtractor={(item) => item.item._id}
-      />
-      <View style={styles.totalContainer}>
-        <Text style={styles.totalText}>Total: ${totalAmount.toFixed(2)}</Text>
-      </View>
-
-      { Object.keys(cartItems).length> 0 && (
-
-      <TouchableOpacity 
-       style={styles.checkoutButton}
-      onPress={() => navigation.navigate('Order')}
-       >
-     <Text style={styles.buttonText}>Checkout</Text>
-       </TouchableOpacity>
-  
-)}
-      
-    </View>
-  );
+     </View>
+   );
 };
 
 const styles = StyleSheet.create({
-  itemPrice: {
-    fontSize: 16,
-    color: '#888',
+  container: { flex: 1, padding: 16, backgroundColor: '#fff' },
+  row: {
+    display: 'flex',
+    flexDirection: 'row',
+    marginVertical: 10,
   },
-  itemQuantity: {
-    fontSize: 16,
-    color: '#888',
-  },
-
   backButton: {
     backgroundColor: '#FF6347',  // Tomato red background
-    paddingVertical: 8,          // Vertical padding for better touch target
-    paddingHorizontal: 15,       // Horizontal padding to make it rectangular
-    borderRadius: 5,             // Small border radius for a subtle rectangle
-    shadowColor: '#000',         // Shadow for a bit of depth
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,          // Lighter shadow for a cleaner look
-    shadowRadius: 2,
-    elevation: 2,                // Low elevation for Android (small shadow)
-    alignSelf: 'flex-start',     // Align to the left
-    marginLeft: 10,              // Slight margin from the screen's edge
-    marginTop: 10,                           // Optional: Slight margin to the left of the screen
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 5,
   },
-
-  back: {fontSize: 24},
-  container: { flex: 1, padding: 16, backgroundColor: '#fff' },
-  title: { fontSize: 24, fontWeight: 'bold', marginTop: 18, marginLeft:15 },
-  cartItem: { flexDirection: 'row', justifyContent: 'space-between', padding: 8, borderBottomWidth: 1, borderBottomColor: '#ddd' },
-  itemName: { fontSize: 16 },
-  itemDetails: { fontSize: 16, color: '#666' },
+  title: { fontSize: 24, fontWeight: 'bold', marginTop: 18, marginLeft: 15 },
   totalContainer: { marginTop: 16, marginBottom: 16 },
   totalText: { fontSize: 18, fontWeight: 'bold' },
   checkoutButton: { backgroundColor: '#ff6347', padding: 16, borderRadius: 8, alignItems: 'center' },
   buttonText: { color: '#fff', fontSize: 18 },
-
-  row:{
-    display:"flex",
-    flexDirection: "row",
-    marginVertical:10
-  }
 });
 
 export default CartScreen;
-function setError(arg0: string) {
-  throw new Error('Function not implemented.');
-}
-
-function setLoading(arg0: boolean) {
-  throw new Error('Function not implemented.');
-}
-
